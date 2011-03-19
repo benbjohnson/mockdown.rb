@@ -1,4 +1,4 @@
-require File.join(File.dirname(File.expand_path(__FILE__)), 'spec_helper')
+require File.join(File.dirname(File.expand_path(__FILE__)), '../spec_helper')
 
 describe Mockdown::Parser do
   ##############################################################################
@@ -18,7 +18,17 @@ describe Mockdown::Parser do
   # Tests
   ##############################################################################
 
-  it 'should create a component' do
+  it 'should create simple component' do
+    pending
     
+    IO.expects(:read).with('test.mkd').returns(
+      <<-BLOCK.unindent
+      %row
+      BLOCK
+    )
+    
+    component = @parser.parse('test')
+    component.name.should == 'test'
+    component.superclass.should == Mockdown::Component::Row
   end
 end

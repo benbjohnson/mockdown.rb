@@ -3,18 +3,25 @@ module Mockdown
     %%{
       machine parser;
 
-			action begin_indent {
-          @indent_start = p
+			# Marks the starting position
+			action mark {
+          @position = p
 			}
 
 			action store_indent {
-          @indentation = data[@indent_start...p].pack("c*")
+          @indentation = data[@position...p].pack("c*")
+			}
+
+			action store_component_name {
+          @component_name = data[@position...p].pack("c*")
 			}
 			
 			EOL = ('\n' | '\r\n');
-			Indentation = ((' '*) >begin_indent) %store_indent;
-			Code = (any-Indentation)*;
-			Line = Indentation . Code :> EOL?;
+			Indentation = ((' '*) >mark) %store_indent;
+			Component_Name = [\-a-zA-Z0-9]+ >mark %store_component_name;
+			Component = '%' Component_Name;
+			Code = Component;
+			Line = Indentation Code? :> EOL?;
 
 			main := Line;
     }%%

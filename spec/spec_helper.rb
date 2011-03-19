@@ -9,8 +9,6 @@ require 'mockdown'
 require 'rspec'
 require 'mocha'
 require 'unindentable'
-require 'fakeweb'
-require 'timecop'
 
 # Configure RSpec
 Rspec.configure do |c|

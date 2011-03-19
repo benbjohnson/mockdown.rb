@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   s.default_executable = 'mkdn'
 
   s.add_dependency('commander', '~> 4.0.3')
+  s.add_dependency('ffi-ncurses', '~> 0.3.3')
 
   s.add_development_dependency('rake', '~> 0.8.7')
   s.add_development_dependency('rspec', '~> 2.4.0')

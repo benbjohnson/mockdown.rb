@@ -3,6 +3,7 @@ PATH
   specs:
     mockdown (0.1.0)
       commander (~> 4.0.3)
+      ffi-ncurses (~> 0.3.3)
 
 GEM
   remote: http://rubygems.org/
@@ -11,8 +12,12 @@ GEM
       highline (>= 1.5.0)
     diff-lcs (1.1.2)
     eden (0.1.1)
+    ffi (1.0.7-java)
+    ffi-ncurses (0.3.3)
+      ffi (>= 0.6.3)
     highline (1.6.1)
     mocha (0.9.12)
+    rake (0.8.7)
     rcov (0.9.9-java)
     rspec (2.4.0)
       rspec-core (~> 2.4.0)
@@ -31,6 +36,7 @@ DEPENDENCIES
   eden (~> 0.1.1)
   mocha (~> 0.9.12)
   mockdown!
+  rake (~> 0.8.7)
   rcov (~> 0.9.9)
   rspec (~> 2.4.0)
   unindentable (~> 0.1.0)

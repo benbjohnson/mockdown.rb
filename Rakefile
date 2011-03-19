@@ -7,6 +7,8 @@ require 'rake/rdoctask'
 require 'rspec/core/rake_task'
 require 'mockdown'
 
+root_dir = File.expand_path(File.dirname(__FILE__))
+
 #############################################################################
 #
 # Standard tasks
@@ -39,23 +41,26 @@ end
 #
 #############################################################################
 
-task :ragel do
-  ragel('parser')
-end
+ragel_files = ["parser"]
 
-def ragel(filename, format=false)
-  dir = File.expand_path(File.dirname(__FILE__))
-  sh "ragel -R #{dir}/ragel/#{filename}.rl -o #{dir}/lib/mockdown/#{filename}.rb"
-  #sh "eden rewrite #{dir}/lib/mockdown/#{filename}.rb"
-end
+namespace :ragel do
+  task :generate do
+    ragel_files.each do |filename|
+      sh "ragel -R #{root_dir}/ragel/#{filename}.rl -o #{root_dir}/lib/mockdown/#{filename}.rb"
+    end
+  end
 
-task :dot do
-  dot('parser')
-end
+  task :format do
+    ragel_files.each do |filename|
+      sh "eden rewrite #{root_dir}/lib/mockdown/#{filename}.rb"
+    end
+  end
 
-def dot(filename)
-  dir = File.expand_path(File.dirname(__FILE__))
-  sh "ragel -V #{dir}/ragel/#{filename}.rl | dot -Tpng -o #{dir}/ragel/dot/#{filename}.png"
+  task :dot do
+    ragel_files.each do |filename|
+      sh "ragel -V #{root_dir}/ragel/#{filename}.rl | dot -Tpng -o #{root_dir}/ragel/dot/#{filename}.png"
+    end
+  end
 end
 
 
