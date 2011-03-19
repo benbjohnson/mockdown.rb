@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+dir = File.dirname(File.expand_path(__FILE__))
+$:.unshift(File.join(dir, '..', 'lib'))
+
+require 'rubygems'
+require 'mockdown'
+require 'commander/import'
+
+program :name, 'Mockdown'
+program :version, Mockdown::VERSION
+program :description, 'Mockups for hackers.'
+
+################################################################################
+# Testing
+################################################################################
+
+command :test do |c|
+  c.syntax = 'grapevine test'
+  c.description = 'Test run.'
+  c.when_called do|args, options|
+    parser = Mockdown::Parser.new()
+    parser.parse("    ")
+  end
+end
