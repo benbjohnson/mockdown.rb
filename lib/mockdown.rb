@@ -6,6 +6,7 @@ require 'mockdown/component/row'
 require 'mockdown/component/column'
 require 'mockdown/component/descriptor'
 
+require 'mockdown/loader'
 require 'mockdown/parser'
 require 'mockdown/version'
 
