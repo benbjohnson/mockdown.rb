@@ -7,27 +7,28 @@ module Mockdown
 
 			# Marks the starting position
 			action mark {
-          @position = p
+			  @position = p
 			}
 
 			action store_indent {
-				  @last_indent = @indent
-          @indent = data[@position...p].pack("c*")
+        @last_indent = @indent
+        @indent = data[@position...p].pack("c*")
 			}
 
-			action store_component_name {
-          @component_name = data[@position...p].pack("c*")
+			action begin_component {
+        name = data[@position...p].pack("c*")
+        @descriptor = @loader.find(name)
 			}
-
+			
 			action store_component {
-				  level = @indent.length/2
-          add_component(name, level)
+        level = @indent.length/2
+        builder.add(@descriptor, level)
 			}
 			
 			EOL = ('\n' | '\r\n');
 			Indentation = ((' '*) >mark) %store_indent;
-			Component_Name = [\-a-zA-Z0-9]+ >mark %store_component_name;
-			Component = '%' Component_Name > store_component;
+			Component_Name = [\-a-zA-Z0-9]+ >mark %begin_component;
+			Component = '%' Component_Name %store_component;
 			Code = Component;
 			Line = Indentation Code? :> EOL?;
 
@@ -41,11 +42,14 @@ module Mockdown
 
     # Parses the given data into a mockdown structure
     def parse(data)
+      builder = Mockdown::Parser::Builder.new()
       data = data.unpack("c*")
       eof = pe = data.length
- 
+
       %% write init;
       %% write exec;
+
+      return builder.descriptor
     end
 
 

@@ -5,7 +5,7 @@ require 'mockdown/parser/builder'
 module Mockdown
   class Parser
     
-# line 74 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 78 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 
     
     def initialize()
@@ -17,8 +17,8 @@ class << self
 	private :_parser_actions, :_parser_actions=
 end
 self._parser_actions = [
-	0, 1, 0, 1, 1, 1, 2, 2, 
-	0, 1, 2, 3, 0
+	0, 1, 0, 1, 1, 2, 0, 1, 
+	2, 2, 3
 ]
 
 class << self
@@ -80,9 +80,9 @@ class << self
 	private :_parser_trans_actions, :_parser_trans_actions=
 end
 self._parser_trans_actions = [
-	0, 0, 10, 10, 10, 10, 0, 7, 
-	7, 1, 7, 0, 0, 3, 3, 0, 
-	3, 0, 5, 5, 0, 0, 0, 0, 
+	0, 0, 1, 1, 1, 1, 0, 5, 
+	5, 1, 5, 0, 0, 3, 3, 0, 
+	3, 0, 8, 8, 0, 0, 0, 0, 
 	0, 0
 ]
 
@@ -91,7 +91,7 @@ class << self
 	private :_parser_eof_actions, :_parser_eof_actions=
 end
 self._parser_eof_actions = [
-	0, 0, 0, 7, 0, 3, 5
+	0, 0, 0, 5, 0, 3, 8
 ]
 
 class << self
@@ -113,25 +113,26 @@ end
 self.parser_en_main = 3;
 
 
-# line 79 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 83 "/projects/benbjohnson/mockdown/ragel/parser.rl"
     end
 
     # Parses the given data into a mockdown structure
     def parse(data)
+      builder = Mockdown::Parser::Builder.new()
       data = data.unpack("c*")
       eof = pe = data.length
- 
+
       
-# line 126 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+# line 127 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 begin
 	p ||= 0
 	pe ||= data.length
 	cs = parser_start
 end
 
-# line 87 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 92 "/projects/benbjohnson/mockdown/ragel/parser.rl"
       
-# line 135 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+# line 136 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 begin
 	_klen, _trans, _keys, _acts, _nacts = nil
 	_goto_level = 0
@@ -215,29 +216,30 @@ when 0 then
 # line 9 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
-          @position = p
+			  @position = p
 					end
 when 1 then
 # line 13 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
-				  @last_indent = @indent
-          @indent = data[@position...p].pack("c*")
+        @last_indent = @indent
+        @indent = data[@position...p].pack("c*")
 					end
 when 2 then
 # line 18 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
-          @component_name = data[@position...p].pack("c*")
+        name = data[@position...p].pack("c*")
+        @descriptor = @loader.find(name)
 					end
 when 3 then
-# line 22 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 23 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
-				  level = @indent.length/2
-          add_component(name, level)
+        level = @indent.length/2
+        builder.add(@descriptor, level)
 					end
-# line 241 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+# line 243 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 			end # action switch
 		end
 	end
@@ -269,22 +271,30 @@ when 0 then
 # line 9 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
-          @position = p
+			  @position = p
 					end
 when 1 then
 # line 13 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
-				  @last_indent = @indent
-          @indent = data[@position...p].pack("c*")
+        @last_indent = @indent
+        @indent = data[@position...p].pack("c*")
 					end
 when 2 then
 # line 18 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
-          @component_name = data[@position...p].pack("c*")
+        name = data[@position...p].pack("c*")
+        @descriptor = @loader.find(name)
 					end
-# line 288 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+when 3 then
+# line 23 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+		begin
+
+        level = @indent.length/2
+        builder.add(@descriptor, level)
+					end
+# line 298 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 		end # eof action switch
 	end
 	if _trigger_goto
@@ -298,7 +308,9 @@ end
 	end
 	end
 
-# line 88 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 93 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+
+      return builder.descriptor
     end
 
 

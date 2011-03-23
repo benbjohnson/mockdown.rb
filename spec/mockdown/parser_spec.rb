@@ -18,17 +18,12 @@ describe Mockdown::Parser do
   # Tests
   ##############################################################################
 
-  it 'should create simple component' do
-    pending
-    
-    IO.expects(:read).with('test.mkd').returns(
+  it 'should parse simple document' do
+    descriptor = @parser.parse(
       <<-BLOCK.unindent
       %row
       BLOCK
     )
-    
-    component = @parser.parse('test')
-    component.name.should == 'test'
-    component.superclass.should == Mockdown::Component::Row
+    descriptor.parent.should == Mockdown::Component::Row
   end
 end
