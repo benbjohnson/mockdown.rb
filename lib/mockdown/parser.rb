@@ -1,21 +1,24 @@
 
 # line 1 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+require 'mockdown/parser/builder'
+
 module Mockdown
   class Parser
     
-# line 27 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 74 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 
     
     def initialize()
+      @loader = Loader.new()
       
-# line 12 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+# line 15 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 class << self
 	attr_accessor :_parser_actions
 	private :_parser_actions, :_parser_actions=
 end
 self._parser_actions = [
 	0, 1, 0, 1, 1, 1, 2, 2, 
-	0, 1
+	0, 1, 2, 3, 0
 ]
 
 class << self
@@ -77,7 +80,7 @@ class << self
 	private :_parser_trans_actions, :_parser_trans_actions=
 end
 self._parser_trans_actions = [
-	0, 0, 1, 1, 1, 1, 0, 7, 
+	0, 0, 10, 10, 10, 10, 0, 7, 
 	7, 1, 7, 0, 0, 3, 3, 0, 
 	3, 0, 5, 5, 0, 0, 0, 0, 
 	0, 0
@@ -110,7 +113,7 @@ end
 self.parser_en_main = 3;
 
 
-# line 31 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 79 "/projects/benbjohnson/mockdown/ragel/parser.rl"
     end
 
     # Parses the given data into a mockdown structure
@@ -119,16 +122,16 @@ self.parser_en_main = 3;
       eof = pe = data.length
  
       
-# line 123 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+# line 126 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 begin
 	p ||= 0
 	pe ||= data.length
 	cs = parser_start
 end
 
-# line 39 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 87 "/projects/benbjohnson/mockdown/ragel/parser.rl"
       
-# line 132 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+# line 135 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 begin
 	_klen, _trans, _keys, _acts, _nacts = nil
 	_goto_level = 0
@@ -209,24 +212,32 @@ begin
 			_acts += 1
 			case _parser_actions[_acts - 1]
 when 0 then
-# line 7 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 9 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
           @position = p
 					end
 when 1 then
-# line 11 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 13 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
-          @indentation = data[@position...p].pack("c*")
+				  @last_indent = @indent
+          @indent = data[@position...p].pack("c*")
 					end
 when 2 then
-# line 15 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 18 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
           @component_name = data[@position...p].pack("c*")
 					end
-# line 230 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+when 3 then
+# line 22 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+		begin
+
+				  level = @indent.length/2
+          add_component(name, level)
+					end
+# line 241 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 			end # action switch
 		end
 	end
@@ -255,24 +266,25 @@ when 2 then
 		__acts += 1
 		case _parser_actions[__acts - 1]
 when 0 then
-# line 7 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 9 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
           @position = p
 					end
 when 1 then
-# line 11 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 13 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
-          @indentation = data[@position...p].pack("c*")
+				  @last_indent = @indent
+          @indent = data[@position...p].pack("c*")
 					end
 when 2 then
-# line 15 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 18 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
           @component_name = data[@position...p].pack("c*")
 					end
-# line 276 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+# line 288 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 		end # eof action switch
 	end
 	if _trigger_goto
@@ -286,7 +298,17 @@ end
 	end
 	end
 
-# line 40 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 88 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+    end
+
+
+    ############################################################################
+    protected
+    ############################################################################
+
+    # Adds a component to the current descriptor
+    def add_component(name, level)
+      descriptor = @loader.find(name)
     end
   end
 end

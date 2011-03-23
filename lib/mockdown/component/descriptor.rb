@@ -9,7 +9,8 @@ module Mockdown
       ##########################################################################
     
       def initialize(parent=nil)
-        @parent     = parent
+        @parent   = parent
+        @children = []
       end
       
 
@@ -42,8 +43,25 @@ module Mockdown
       def create()
         instance = create_instance()
         set_properties(instance)
-        add_children(instance)
+        create_children(instance)
         return instance
+      end
+
+      # Adds a child descriptor.
+      #
+      # @param [Descriptor] child  the child descriptor to add.
+      def add_child(child)
+        @children << child
+        child.parent = self
+      end
+
+      # Removes a child descriptor.
+      #
+      # @param [Descriptor] child  the child descriptor to remove.
+      def remove_child(child)
+        if @children.delete(child)
+          child.parent = nil
+        end
       end
       
       
@@ -93,7 +111,7 @@ module Mockdown
       
       # Instantiates the descriptor's child descriptors and adds the child
       # components to the new instance of this descriptor.
-      def add_children(instance)
+      def create_children(instance)
         # Add children to component
         if children
           children.each do |child|

@@ -20,7 +20,7 @@ describe Mockdown::Component::Descriptor do
   ##############################################################################
 
   #####################################
-  # Instantiation
+  # Create
   #####################################
 
   it 'should instantiate from parent class' do
@@ -47,11 +47,6 @@ describe Mockdown::Component::Descriptor do
       to raise_error(StandardError, 'Cannot instantiate parent of descriptor: Hash')
   end
 
-
-  #####################################
-  # Properties
-  #####################################
-
   it 'should set properties on component' do
     @descriptor.properties = {'x' => 10, 'y' => 20}
     instance = @descriptor.create()
@@ -69,11 +64,6 @@ describe Mockdown::Component::Descriptor do
     instance.y.should == 20
   end
 
-
-  #####################################
-  # Children
-  #####################################
-
   it 'should add children to component' do
     @descriptor.children = [
       Mockdown::Component::Descriptor.new(Mockdown::Component::Row),
@@ -84,5 +74,25 @@ describe Mockdown::Component::Descriptor do
     row, col = *instance.children
     row.class.should == Mockdown::Component::Row
     col.class.should == Mockdown::Component::Column
+  end
+
+
+  #####################################
+  # Children
+  #####################################
+  
+  it 'should add child descriptor' do
+    child = Mockdown::Component::Descriptor.new()
+    @descriptor.add_child(child)
+    @descriptor.children.length.should == 1
+    child.parent.should == @descriptor
+  end
+
+  it 'should remove child descriptor' do
+    child = Mockdown::Component::Descriptor.new()
+    @descriptor.add_child(child)
+    @descriptor.remove_child(child)
+    @descriptor.children.length.should == 0
+    child.parent.should be_nil
   end
 end

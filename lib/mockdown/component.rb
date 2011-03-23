@@ -59,3 +59,9 @@ module Mockdown
     end
   end 
 end
+
+require 'mockdown/component/container'
+require 'mockdown/component/row'
+require 'mockdown/component/column'
+require 'mockdown/component/descriptor'
+

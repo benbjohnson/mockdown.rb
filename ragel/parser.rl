@@ -1,3 +1,5 @@
+require 'mockdown/parser/builder'
+
 module Mockdown
   class Parser
     %%{
@@ -9,17 +11,23 @@ module Mockdown
 			}
 
 			action store_indent {
-          @indentation = data[@position...p].pack("c*")
+				  @last_indent = @indent
+          @indent = data[@position...p].pack("c*")
 			}
 
 			action store_component_name {
           @component_name = data[@position...p].pack("c*")
 			}
+
+			action store_component {
+				  level = @indent.length/2
+          add_component(name, level)
+			}
 			
 			EOL = ('\n' | '\r\n');
 			Indentation = ((' '*) >mark) %store_indent;
 			Component_Name = [\-a-zA-Z0-9]+ >mark %store_component_name;
-			Component = '%' Component_Name;
+			Component = '%' Component_Name > store_component;
 			Code = Component;
 			Line = Indentation Code? :> EOL?;
 
@@ -27,6 +35,7 @@ module Mockdown
     }%%
     
     def initialize()
+      @loader = Loader.new()
       %% write data;
     end
 
@@ -37,6 +46,16 @@ module Mockdown
  
       %% write init;
       %% write exec;
+    end
+
+
+    ############################################################################
+    protected
+    ############################################################################
+
+    # Adds a component to the current descriptor
+    def add_component(name, level)
+      descriptor = @loader.find(name)
     end
   end
 end
