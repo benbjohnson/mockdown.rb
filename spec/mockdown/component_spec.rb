@@ -18,6 +18,38 @@ describe Mockdown::Component do
   # Tests
   ##############################################################################
 
+  #####################################
+  # Properties
+  #####################################
+  
+  it 'should add property' do
+    @component.add_property('foo', 'string')
+    property = @component.get_property('foo')
+    property.name.should == 'foo'
+    property.type.should == 'string'
+  end
+  
+  it 'should set and get property value' do
+    @component.add_property('foo', 'string')
+    @component.foo = 'bar'
+    @component.foo.should == 'bar'
+  end
+  
+  it 'should throw error when getting non-existant property' do
+    expect {x = @component.foo}.
+      to raise_error(StandardError, 'Property does not exist on component: foo')
+  end
+
+  it 'should throw error when setting non-existant property' do
+    expect {@component.foo = 'bar'}.
+      to raise_error(StandardError, 'Property does not exist on component: foo')
+  end
+
+  
+  #####################################
+  # Children
+  #####################################
+  
   it 'should add child' do
     child = Mockdown::Component.new()
     @component.add_child(child)

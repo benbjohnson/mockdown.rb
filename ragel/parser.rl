@@ -24,11 +24,29 @@ module Mockdown
         level = @indent.length/2
         builder.add(@descriptor, level)
 			}
+
+			action store_component_property_key {
+        component_key = data[@position...p].pack("c*")
+			}
+
+			action store_component_property_value {
+        component_value = data[@position...p].pack("c*")
+        component_value = component_value[1..-2]    # Strip quotes
+			}
+			
+			action store_component_property {
+        component_value = data[@position...p].pack("c*")
+        component_value = component_value[1..-2]    # Strip quotes
+			}
 			
 			EOL = ('\n' | '\r\n');
 			Indentation = ((' '*) >mark) %store_indent;
 			Component_Name = [\-a-zA-Z0-9]+ >mark %begin_component;
-			Component = '%' Component_Name %store_component;
+			Component_Property_Key = [\-a-zA-Z0-9]+ >mark %store_component_property_key;
+			Component_Property_Value = '"' [^"]+ . '"' >mark %store_component_property_value;
+			Component_Property = Component_Property_Key '=' Component_Property_Value %store_component_property;
+			Component_Properties = Component_Property . (' '+ | EOL);
+			Component = '%' Component_Name (' '+ . Component_Properties)? %store_component;
 			Code = Component;
 			Line = Indentation Code? :> EOL?;
 

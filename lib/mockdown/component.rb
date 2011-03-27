@@ -1,11 +1,13 @@
 module Mockdown
-  # A component represents a reusable visual object.
+  # This class represents a visual object.
   class Component
     ############################################################################
     # Constructor
     ############################################################################
     
     def initialize()
+      @properties = {}
+      @property_values = {}
       @children = []
     end
 
@@ -41,6 +43,51 @@ module Mockdown
     ############################################################################
 
     ####################################
+    # Properties
+    ####################################
+    
+    # Adds a property to the component.
+    #
+    # @param [String] name  the property name.
+    # @param [String] type  the property data type.
+    def add_property(name, type)
+      @properties[name] = Property.new(name, type)
+    end
+
+    # Retrieves a property definition on the component.
+    #
+    # @param [String] name  the property name.
+    #
+    # @return [Property]  the property definition.
+    def get_property(name)
+      return @properties[name]
+    end
+    
+    # Proxies calls to the object's properties
+    def method_missing(sym, *args, &block)
+      # Determine the property name and if it is a setter
+      property_name = sym.to_s
+      accessor = (property_name[-1..-1] != "=")
+      property_name.chop! unless accessor
+      property = @properties[property_name]
+      
+      # If the property exists, use it.
+      if property
+        if accessor
+          return @property_values[property_name]
+        else
+          value = *args
+          @property_values[property_name] = property.parse(value)
+        end
+        
+      # Otherwise throw an error
+      else
+        raise StandardError.new("Property does not exist on component: #{property_name}")
+      end
+    end
+    
+    
+    ####################################
     # Children
     ####################################
     
@@ -60,6 +107,7 @@ module Mockdown
   end 
 end
 
+require 'mockdown/component/property'
 require 'mockdown/component/container'
 require 'mockdown/component/row'
 require 'mockdown/component/column'
