@@ -11,6 +11,8 @@ module Mockdown
       def initialize(parent=nil)
         @parent   = parent
         @children = []
+        @properties = {}
+        @property_values = {}
       end
       
 
@@ -39,14 +41,23 @@ module Mockdown
       # Methods
       ##########################################################################
       
+      #################################
+      # Instantiation
+      #################################
+      
       # Creates a new instance of a component described by this descriptor.
       def create()
         instance = create_instance()
-        set_properties(instance)
-        create_children(instance)
+        set_instance_properties(instance)
+        create_instance_children(instance)
         return instance
       end
 
+
+      #################################
+      # Children
+      #################################
+      
       # Adds a child descriptor.
       #
       # @param [Descriptor] child  the child descriptor to add.
@@ -64,6 +75,78 @@ module Mockdown
         end
       end
       
+
+      #################################
+      # Properties
+      #################################
+      
+      # Adds a property to the descriptor.
+      #
+      # @param [String] property  the property to add.
+      def add_property(property)
+        # Throw error if property is nil
+        if property.nil?
+          raise StandardError.new("Cannot add a nil property")
+        end
+
+        # Throw error if property already exists.
+        if !@properties[name].nil?
+          raise StandardError.new("Property already exists: #{property.name}")
+        end
+        
+        @properties[property.name] = property
+      end
+
+      # Removes a property from the descriptor.
+      #
+      # @param [Property] property  the property to remove.
+      def remove_property(property)
+        @properties.delete(property.name)
+      end
+
+      # Retrieves a property by name.
+      #
+      # @param [String] name  the name of the property to retrieve.
+      #
+      # @return  the property on this descriptor with the given name.
+      def get_property(name)
+        return @properties[name]
+      end
+
+
+      # Sets the value of a property.
+      #
+      # @param [String] name   the name of the property to set.
+      # @param [String] value  the value to set.
+      def set_property_value(name, value)
+        property = get_property(name)
+        
+        # Throw error if property doesn't exist
+        if property.nil?
+          raise StandardError.new("Property does not exist: #{name}")
+        end
+
+        # Set the property value
+        @property_values[name] = property.parse(value)
+      end
+
+      # Retrieves the value of a property.
+      #
+      # @param [String] name   the name of the property to retrieve.
+      #
+      # @return [Object]  the value that has been set for a given property.
+      def get_property_value(name)
+        property = get_property(name)
+        
+        # Throw error if property doesn't exist
+        if property.nil?
+          raise StandardError.new("Property does not exist: #{name}")
+        end
+
+        # Return the property value
+        return @property_values[name]
+      end
+
       
       ##########################################################################
       protected
@@ -100,7 +183,7 @@ module Mockdown
       
       # Sets the properties specified by the descriptor onto a component
       # instance.
-      def set_properties(instance)
+      def set_instance_properties(instance)
         # Loop over properties and set them on instance
         if properties
           properties.each_pair do |key, value|
@@ -111,7 +194,7 @@ module Mockdown
       
       # Instantiates the descriptor's child descriptors and adds the child
       # components to the new instance of this descriptor.
-      def create_children(instance)
+      def create_instance_children(instance)
         # Add children to component
         if children
           children.each do |child|

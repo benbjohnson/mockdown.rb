@@ -48,10 +48,9 @@ module Mockdown
     
     # Adds a property to the component.
     #
-    # @param [String] name  the property name.
-    # @param [String] type  the property data type.
-    def add_property(name, type)
-      @properties[name] = Property.new(name, type)
+    # @param [Property] property  the property to add.
+    def add_property(property)
+      @properties[property.name] = property
     end
 
     # Retrieves a property definition on the component.

@@ -23,14 +23,13 @@ describe Mockdown::Component do
   #####################################
   
   it 'should add property' do
-    @component.add_property('foo', 'string')
-    property = @component.get_property('foo')
-    property.name.should == 'foo'
-    property.type.should == 'string'
+    property = Mockdown::Component::Property.new('foo', 'string')
+    @component.add_property(property)
+    @component.get_property('foo').should == property
   end
   
   it 'should set and get property value' do
-    @component.add_property('foo', 'string')
+    @component.add_property(Mockdown::Component::Property.new('foo', 'string'))
     @component.foo = 'bar'
     @component.foo.should == 'bar'
   end

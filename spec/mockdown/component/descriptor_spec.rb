@@ -95,4 +95,34 @@ describe Mockdown::Component::Descriptor do
     @descriptor.children.length.should == 0
     child.parent.should be_nil
   end
+
+
+  #####################################
+  # Properties
+  #####################################
+
+  it 'should add property' do
+    property = Mockdown::Component::Property.new('foo', 'string')
+    @descriptor.add_property(property)
+    @descriptor.get_property('foo').should == property
+  end
+
+  it 'should remove property' do
+    property = Mockdown::Component::Property.new('foo', 'string')
+    @descriptor.add_property(property)
+    @descriptor.remove_property(property)
+    @descriptor.get_property('foo').should be_nil
+  end
+
+  it 'should set property value' do
+    property = Mockdown::Component::Property.new('foo', 'string')
+    @descriptor.add_property(property)
+    @descriptor.set_property_value('foo', 'bar')
+    @descriptor.get_property_value('foo').should == 'bar'
+  end
+
+  it 'should throw error when setting non-existant property' do
+    expect {@descriptor.set_property_value('foo', 'bar')}.
+      to raise_error(StandardError, 'Property does not exist: foo')
+  end
 end
