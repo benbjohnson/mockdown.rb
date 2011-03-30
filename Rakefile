@@ -5,7 +5,7 @@ require 'rubygems'
 require 'rake'
 require 'rake/rdoctask'
 require 'rspec/core/rake_task'
-require 'mockdown'
+require 'mockdown/version'
 
 root_dir = File.expand_path(File.dirname(__FILE__))
 
@@ -58,7 +58,7 @@ namespace :ragel do
 
   task :dot do
     ragel_files.each do |filename|
-      sh "ragel -V #{root_dir}/ragel/#{filename}.rl | dot -Tpng -o #{root_dir}/ragel/dot/#{filename}.png"
+      sh "ragel -pV #{root_dir}/ragel/#{filename}.rl | dot -Tpng -o #{root_dir}/ragel/dot/#{filename}.png"
     end
   end
 end

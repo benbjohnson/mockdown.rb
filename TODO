@@ -1,2 +1,2 @@
--> Add property values to descriptors
-  -> Finish parser
+- Parser should check data type formatting from property.
+- Copy properties and values from descriptor to component on instantiation.

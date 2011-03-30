@@ -97,20 +97,17 @@ module Mockdown
         @properties[property.name] = property
       end
 
-      # Removes a property from the descriptor.
-      #
-      # @param [Property] property  the property to remove.
-      def remove_property(property)
-        @properties.delete(property.name)
-      end
-
       # Retrieves a property by name.
       #
       # @param [String] name  the name of the property to retrieve.
       #
       # @return  the property on this descriptor with the given name.
       def get_property(name)
-        return @properties[name]
+        if @properties[name]
+          return @properties[name]
+        else
+          return parent.get_property(name)
+        end
       end
 
 

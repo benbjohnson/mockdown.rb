@@ -1,6 +1,45 @@
+require 'mockdown/component/property'
+require 'mockdown/component/descriptor'
+
 module Mockdown
   # This class represents a visual object.
   class Component
+    ############################################################################
+    # Static Methods
+    ############################################################################
+    
+    @@class_properties = {}
+    
+    # Adds a property for a Ruby-based component class. Properties created with
+    # Mockdown should be added via add_property().
+    #
+    # @param [String] name  the name of the property.
+    # @param [String] type  the data type of the property.
+    def self.add_property(name, type)
+      @@class_properties[name] = Property.new(name, type)
+    end
+
+    # Retrieves a property declared by a Ruby class.
+    #
+    # @param [String] name  the name of the property to retrieve.
+    #
+    # @return [Property]  the property with the given name.
+    def self.get_property(name)
+      return @@class_properties[name]
+    end
+    
+    
+    ####################################
+    # Properties
+    ####################################
+
+    add_property('x', 'integer')
+    add_property('y', 'integer')
+
+    add_property('width', 'integer')
+    add_property('height', 'integer')
+    
+
     ############################################################################
     # Constructor
     ############################################################################
@@ -9,6 +48,8 @@ module Mockdown
       @properties = {}
       @property_values = {}
       @children = []
+      
+      initialize_properties()
     end
 
 
@@ -26,17 +67,6 @@ module Mockdown
     # The children attached to this component.
     attr_reader :children
 
-
-    ####################################
-    # Position
-    ####################################
-
-    # The absolute position from the left of the parent container.
-    attr_accessor :x
-    
-    # The absolute position from the top of the parent container.
-    attr_accessor :y
-    
 
     ############################################################################
     # Methods
@@ -103,12 +133,21 @@ module Mockdown
       @children.delete(child)
       nil
     end
+
+
+    ############################################################################
+    # Protected Methods
+    ############################################################################
+    
+    protected
+    
+    def initialize_properties()
+      @properties.merge!(@@class_properties)
+    end
   end 
 end
 
-require 'mockdown/component/property'
 require 'mockdown/component/container'
 require 'mockdown/component/row'
 require 'mockdown/component/column'
-require 'mockdown/component/descriptor'
 

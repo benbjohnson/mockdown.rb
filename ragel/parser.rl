@@ -25,30 +25,27 @@ module Mockdown
         builder.add(@descriptor, level)
 			}
 
-			action store_component_property_key {
-        component_key = data[@position...p].pack("c*")
+			action store_property_name {
+        property_name = data[@position...p].pack("c*")
 			}
 
-			action store_component_property_value {
-        component_value = data[@position...p].pack("c*")
-        component_value = component_value[1..-2]    # Strip quotes
+			action store_property_value {
+        property_value = data[@position...p].pack("c*")
+        property_value = property_value[1..-2]    # Strip quotes
 			}
 			
-			action store_component_property {
-        component_value = data[@position...p].pack("c*")
-        component_value = component_value[1..-2]    # Strip quotes
+			action store_property {
+        @descriptor.set_property_value(property_name, property_value)
 			}
 			
-			EOL = ('\n' | '\r\n');
+			EOL = '\n';
 			Indentation = ((' '*) >mark) %store_indent;
-			Component_Name = [\-a-zA-Z0-9]+ >mark %begin_component;
-			Component_Property_Key = [\-a-zA-Z0-9]+ >mark %store_component_property_key;
-			Component_Property_Value = '"' [^"]+ . '"' >mark %store_component_property_value;
-			Component_Property = Component_Property_Key '=' Component_Property_Value %store_component_property;
-			Component_Properties = Component_Property . (' '+ | EOL);
-			Component = '%' Component_Name (' '+ . Component_Properties)? %store_component;
-			Code = Component;
-			Line = Indentation Code? :> EOL?;
+			Component_Name = ([\a-z] [\-a-z0-9]*) >mark %begin_component;
+			Property_Name = ([\a-z] [\-a-z0-9]+) >mark %store_property_name;
+			Property_Value = ('"' . [^"]+ . '"') >mark %store_property_value;
+			Property = (Property_Name . '=' . Property_Value) %store_property;
+			Component = ('%' Component_Name . (' '+ . Property)* . ' '*) %store_component;
+			Line = Indentation Component? :> EOL?;
 
 			main := Line;
     }%%
@@ -61,12 +58,22 @@ module Mockdown
     # Parses the given data into a mockdown structure
     def parse(data)
       builder = Mockdown::Parser::Builder.new()
+      
+      # Convert Windows newlines to Unix newlines for FSM simplicity.
+      data.gsub!("\r\n", "\n")
+      
+      # Prepare data for Ragel
       data = data.unpack("c*")
       eof = pe = data.length
 
       %% write init;
       %% write exec;
 
+      # Raise error if parser does not complete
+      if p != pe
+        raise StandardError.new("Unexpected character at character #{p}: '#{data[p].chr}'")
+      end
+      
       return builder.descriptor
     end
 

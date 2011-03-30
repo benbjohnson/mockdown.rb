@@ -33,7 +33,7 @@ describe Mockdown::Parser do
       %row width="100" height="200"
       BLOCK
     )
-    descriptor.properties['width'].should == 100
-    descriptor.properties['height'].should == 200
+    descriptor.get_property_value('width').should == 100
+    descriptor.get_property_value('height').should == 200
   end
 end

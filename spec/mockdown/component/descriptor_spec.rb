@@ -107,13 +107,6 @@ describe Mockdown::Component::Descriptor do
     @descriptor.get_property('foo').should == property
   end
 
-  it 'should remove property' do
-    property = Mockdown::Component::Property.new('foo', 'string')
-    @descriptor.add_property(property)
-    @descriptor.remove_property(property)
-    @descriptor.get_property('foo').should be_nil
-  end
-
   it 'should set property value' do
     property = Mockdown::Component::Property.new('foo', 'string')
     @descriptor.add_property(property)

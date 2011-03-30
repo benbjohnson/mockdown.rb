@@ -5,7 +5,7 @@ require 'mockdown/parser/builder'
 module Mockdown
   class Parser
     
-# line 114 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 118 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 
     
     def initialize()
@@ -19,7 +19,7 @@ end
 self._parser_actions = [
 	0, 1, 0, 1, 1, 1, 2, 1, 
 	3, 1, 4, 2, 0, 1, 2, 2, 
-	3, 2, 5, 6
+	3, 2, 5, 6, 3, 5, 6, 3
 ]
 
 class << self
@@ -27,8 +27,8 @@ class << self
 	private :_parser_key_offsets, :_parser_key_offsets=
 end
 self._parser_key_offsets = [
-	0, 0, 1, 8, 16, 24, 25, 26, 
-	27, 30, 31, 35, 35, 39, 49, 51
+	0, 0, 2, 7, 13, 14, 15, 16, 
+	19, 19, 22, 29, 33, 35
 ]
 
 class << self
@@ -36,13 +36,12 @@ class << self
 	private :_parser_trans_keys, :_parser_trans_keys=
 end
 self._parser_trans_keys = [
-	10, 45, 48, 57, 65, 90, 97, 122, 
-	32, 45, 48, 57, 65, 90, 97, 122, 
-	45, 61, 48, 57, 65, 90, 97, 122, 
-	34, 34, 34, 10, 13, 32, 10, 10, 
-	13, 32, 37, 10, 13, 32, 37, 10, 
-	13, 32, 45, 48, 57, 65, 90, 97, 
-	122, 10, 13, 10, 13, 32, 0
+	7, 122, 45, 48, 57, 97, 122, 45, 
+	61, 48, 57, 97, 122, 34, 34, 34, 
+	10, 32, 37, 10, 32, 37, 10, 32, 
+	45, 48, 57, 97, 122, 10, 32, 7, 
+	122, 10, 32, 10, 32, 45, 7, 47, 
+	48, 57, 58, 96, 97, 122, 0
 ]
 
 class << self
@@ -50,8 +49,8 @@ class << self
 	private :_parser_single_lengths, :_parser_single_lengths=
 end
 self._parser_single_lengths = [
-	0, 1, 1, 2, 2, 1, 1, 1, 
-	3, 1, 4, 0, 4, 4, 2, 3
+	0, 0, 1, 2, 1, 1, 1, 3, 
+	0, 3, 3, 2, 2, 3
 ]
 
 class << self
@@ -59,8 +58,8 @@ class << self
 	private :_parser_range_lengths, :_parser_range_lengths=
 end
 self._parser_range_lengths = [
-	0, 0, 3, 3, 3, 0, 0, 0, 
-	0, 0, 0, 0, 0, 3, 0, 0
+	0, 1, 2, 2, 0, 0, 0, 0, 
+	0, 0, 2, 1, 0, 4
 ]
 
 class << self
@@ -68,8 +67,21 @@ class << self
 	private :_parser_index_offsets, :_parser_index_offsets=
 end
 self._parser_index_offsets = [
-	0, 0, 2, 7, 13, 19, 21, 23, 
-	25, 29, 31, 36, 37, 42, 50, 53
+	0, 0, 2, 6, 11, 13, 15, 17, 
+	21, 22, 26, 32, 36, 39
+]
+
+class << self
+	attr_accessor :_parser_indicies
+	private :_parser_indicies, :_parser_indicies=
+end
+self._parser_indicies = [
+	0, 1, 2, 2, 2, 1, 2, 3, 
+	2, 2, 1, 4, 1, 1, 5, 6, 
+	5, 7, 8, 9, 1, 1, 10, 11, 
+	12, 1, 13, 14, 15, 15, 15, 1, 
+	17, 18, 16, 1, 19, 20, 1, 17, 
+	18, 21, 16, 21, 16, 21, 1, 0
 ]
 
 class << self
@@ -77,14 +89,9 @@ class << self
 	private :_parser_trans_targs, :_parser_trans_targs=
 end
 self._parser_trans_targs = [
-	11, 0, 13, 13, 13, 13, 0, 3, 
-	4, 4, 4, 4, 0, 4, 5, 4, 
-	4, 4, 0, 6, 0, 0, 7, 8, 
-	7, 14, 9, 15, 0, 14, 0, 11, 
-	1, 12, 2, 0, 0, 11, 1, 12, 
-	2, 0, 11, 1, 3, 13, 13, 13, 
-	13, 0, 11, 1, 0, 11, 1, 15, 
-	0, 0
+	10, 0, 3, 4, 5, 6, 12, 8, 
+	9, 1, 8, 9, 1, 8, 11, 10, 
+	2, 8, 13, 8, 11, 3
 ]
 
 class << self
@@ -92,14 +99,9 @@ class << self
 	private :_parser_trans_actions, :_parser_trans_actions=
 end
 self._parser_trans_actions = [
-	0, 0, 1, 1, 1, 1, 0, 0, 
-	1, 1, 1, 1, 0, 0, 9, 0, 
-	0, 0, 0, 0, 0, 0, 0, 1, 
-	0, 17, 17, 17, 0, 0, 0, 11, 
-	11, 1, 11, 0, 0, 3, 3, 0, 
-	3, 0, 14, 14, 5, 0, 0, 0, 
-	0, 0, 7, 7, 0, 7, 7, 0, 
-	0, 0
+	1, 0, 0, 9, 1, 0, 0, 11, 
+	1, 11, 3, 0, 3, 14, 5, 0, 
+	1, 7, 1, 20, 17, 1
 ]
 
 class << self
@@ -107,18 +109,18 @@ class << self
 	private :_parser_eof_actions, :_parser_eof_actions=
 end
 self._parser_eof_actions = [
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 11, 0, 3, 14, 7, 7
+	0, 0, 0, 0, 0, 0, 0, 11, 
+	0, 3, 14, 7, 20, 7
 ]
 
 class << self
 	attr_accessor :parser_start
 end
-self.parser_start = 10;
+self.parser_start = 7;
 class << self
 	attr_accessor :parser_first_final
 end
-self.parser_first_final = 10;
+self.parser_first_final = 7;
 class << self
 	attr_accessor :parser_error
 end
@@ -127,29 +129,34 @@ self.parser_error = 0;
 class << self
 	attr_accessor :parser_en_main
 end
-self.parser_en_main = 10;
+self.parser_en_main = 7;
 
 
-# line 119 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 123 "/projects/benbjohnson/mockdown/ragel/parser.rl"
     end
 
     # Parses the given data into a mockdown structure
     def parse(data)
       builder = Mockdown::Parser::Builder.new()
+      
+      # Convert Windows newlines to Unix newlines for FSM simplicity.
+      data.gsub!("\r\n", "\n")
+      
+      # Prepare data for Ragel
       data = data.unpack("c*")
       eof = pe = data.length
 
       
-# line 144 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+# line 151 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 begin
 	p ||= 0
 	pe ||= data.length
 	cs = parser_start
 end
 
-# line 128 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 137 "/projects/benbjohnson/mockdown/ragel/parser.rl"
       
-# line 153 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+# line 160 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 begin
 	_klen, _trans, _keys, _acts, _nacts = nil
 	_goto_level = 0
@@ -220,6 +227,7 @@ begin
 	     _trans += _klen
 	  end
 	end while false
+	_trans = _parser_indicies[_trans]
 	cs = _parser_trans_targs[_trans]
 	if _parser_trans_actions[_trans] != 0
 		_acts = _parser_trans_actions[_trans]
@@ -257,26 +265,25 @@ when 3 then
         builder.add(@descriptor, level)
 					end
 when 4 then
-# line 88 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 95 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
-        component_key = data[@position...p].pack("c*")
+        property_name = data[@position...p].pack("c*")
 					end
 when 5 then
-# line 92 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 99 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
-        component_value = data[@position...p].pack("c*")
-        component_value = component_value[1..-2]    # Strip quotes
+        property_value = data[@position...p].pack("c*")
+        property_value = property_value[1..-2]    # Strip quotes
 					end
 when 6 then
-# line 97 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 104 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
-        component_value = data[@position...p].pack("c*")
-        component_value = component_value[1..-2]    # Strip quotes
+        @descriptor.set_property_value(property_name, property_value)
 					end
-# line 280 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+# line 287 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 			end # action switch
 		end
 	end
@@ -331,7 +338,20 @@ when 3 then
         level = @indent.length/2
         builder.add(@descriptor, level)
 					end
-# line 335 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+when 5 then
+# line 99 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+		begin
+
+        property_value = data[@position...p].pack("c*")
+        property_value = property_value[1..-2]    # Strip quotes
+					end
+when 6 then
+# line 104 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+		begin
+
+        @descriptor.set_property_value(property_name, property_value)
+					end
+# line 355 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 		end # eof action switch
 	end
 	if _trigger_goto
@@ -345,8 +365,13 @@ end
 	end
 	end
 
-# line 129 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 138 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 
+      # Raise error if parser does not complete
+      if p != pe
+        raise StandardError.new("Unexpected character at character #{p}: '#{data[p].chr}'")
+      end
+      
       return builder.descriptor
     end
 

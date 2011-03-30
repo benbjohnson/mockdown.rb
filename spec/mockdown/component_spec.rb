@@ -44,6 +44,13 @@ describe Mockdown::Component do
       to raise_error(StandardError, 'Property does not exist on component: foo')
   end
 
+  it 'should add class-based properties' do
+    @component.get_property('x').should_not be_nil
+    @component.get_property('y').should_not be_nil
+    @component.get_property('width').should_not be_nil
+    @component.get_property('height').should_not be_nil
+  end
+
   
   #####################################
   # Children
