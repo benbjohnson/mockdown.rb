@@ -27,13 +27,24 @@ describe Mockdown::Parser do
     descriptor.parent.should == Mockdown::Component::Row
   end
 
-  it 'should parse component values' do
+  it 'should parse property values' do
     descriptor = @parser.parse(
       <<-BLOCK.unindent
-      %row width="100" height="200"
+      %row width="100" height="200" 
       BLOCK
     )
     descriptor.get_property_value('width').should == 100
     descriptor.get_property_value('height').should == 200
+  end
+
+  it 'should error on invalid property values' do
+    expect do
+      @parser.parse(
+        <<-BLOCK.unindent
+        %row width="foo"
+        BLOCK
+      )
+    end.
+      to raise_error(StandardError, "Invalid integer value for 'width': 'foo'")
   end
 end

@@ -1,2 +1,4 @@
-- Parser should check data type formatting from property.
 - Copy properties and values from descriptor to component on instantiation.
+- Add component phases: measure(), layout(), render()
+- Add command line renderer
+- Add container classes

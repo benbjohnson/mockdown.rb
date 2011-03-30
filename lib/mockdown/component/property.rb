@@ -58,6 +58,27 @@ module Mockdown
         when 'decimal' then value.to_f
         end
       end
+
+      # Checks if a given string value valid for the property's data type.
+      #
+      # @param [Object] value  the string to validate.
+      #
+      # @return [Boolean]  true, if string is valid. Otherwise false.
+      def valid_input?(value)
+        if value.nil?
+          raise StandardError.new("Cannot validate null value")
+        end
+        
+        # Convert to string first
+        value = value.to_s
+        
+        # Match depending on type
+        case type
+        when 'string' then true
+        when 'integer' then !value.match(/^-?\d+?$/).nil?
+        when 'decimal' then !value.match(/^-?\d+(\.\d+)?$/).nil?
+        end
+      end
     end
   end 
 end

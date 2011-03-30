@@ -77,4 +77,32 @@ describe Mockdown::Component::Property do
   it 'should parse decimal to decimal' do
     Mockdown::Component::Property.new('foo', 'decimal').parse(100.32).should == 100.32
   end
+
+
+  #####################################
+  # Parse
+  #####################################
+
+  it 'should validate string input' do
+    Mockdown::Component::Property.new('foo', 'string').valid_input?('hello').should be_true
+    Mockdown::Component::Property.new('foo', 'string').valid_input?('10').should be_true
+    Mockdown::Component::Property.new('foo', 'string').valid_input?('10.2').should be_true
+  end
+
+  it 'should validate integer input' do
+    Mockdown::Component::Property.new('foo', 'integer').valid_input?("foo").should be_false
+    Mockdown::Component::Property.new('foo', 'integer').valid_input?("10").should be_true
+    Mockdown::Component::Property.new('foo', 'integer').valid_input?("10.2").should be_false
+  end
+
+  it 'should validate decimal input' do
+    Mockdown::Component::Property.new('foo', 'decimal').valid_input?("foo").should be_false
+    Mockdown::Component::Property.new('foo', 'decimal').valid_input?("10").should be_true
+    Mockdown::Component::Property.new('foo', 'decimal').valid_input?("10.2").should be_true
+  end
+
+  it 'should raise error when validating null input' do
+    expect {Mockdown::Component::Property.new('foo', 'string').valid_input?(nil)}.
+      to raise_error(StandardError, 'Cannot validate null value')
+  end
 end

@@ -123,6 +123,11 @@ module Mockdown
           raise StandardError.new("Property does not exist: #{name}")
         end
 
+        # Throw error if property is not valid
+        if !property.valid_input?(value)
+          raise StandardError.new("Invalid #{property.type} value for '#{name}': '#{value}'")
+        end
+
         # Set the property value
         @property_values[name] = property.parse(value)
       end

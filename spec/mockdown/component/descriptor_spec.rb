@@ -118,4 +118,16 @@ describe Mockdown::Component::Descriptor do
     expect {@descriptor.set_property_value('foo', 'bar')}.
       to raise_error(StandardError, 'Property does not exist: foo')
   end
+
+  it 'should throw error when setting invalid integer value' do
+    @descriptor.add_property(Mockdown::Component::Property.new('foo', 'integer'))
+    expect {@descriptor.set_property_value('foo', 'bar')}.
+      to raise_error(StandardError, "Invalid integer value for 'foo': 'bar'")
+  end
+
+  it 'should throw error when setting decimal integer value' do
+    @descriptor.add_property(Mockdown::Component::Property.new('foo', 'decimal'))
+    expect {@descriptor.set_property_value('foo', 'bar')}.
+      to raise_error(StandardError, "Invalid decimal value for 'foo': 'bar'")
+  end
 end
