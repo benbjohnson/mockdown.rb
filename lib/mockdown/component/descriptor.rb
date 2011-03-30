@@ -110,6 +110,11 @@ module Mockdown
         end
       end
 
+      # Retrieves a hash of all properties.
+      def get_properties()
+        return @properties
+      end
+
 
       # Sets the value of a property.
       #
@@ -186,6 +191,13 @@ module Mockdown
       # Sets the properties specified by the descriptor onto a component
       # instance.
       def set_instance_properties(instance)
+        # Add the properties of this descriptor and it's parents to the component
+        descriptor = self
+        while !descriptor.nil?
+          instance.add_properties(descriptor.get_properties())
+          descriptor = descriptor.is_a?(Descriptor) ? descriptor.parent : nil
+        end
+        
         # Loop over properties and set them on instance
         if properties
           properties.each_pair do |key, value|

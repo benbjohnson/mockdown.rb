@@ -54,6 +54,18 @@ describe Mockdown::Component::Descriptor do
     instance.y.should == 20
   end
 
+  it 'should copy properties to instance' do
+    property = Mockdown::Component::Property.new('foo', 'string')
+    @descriptor.add_property(property)
+    instance = @descriptor.create()
+    instance.get_property('foo').should == property
+  end
+
+  it 'should copy class-based properties to instance' do
+    instance = @descriptor.create()
+    instance.get_property('x').should_not be_nil
+  end
+
   it 'should set properties on component from parent descriptor' do
     parent = Mockdown::Component::Descriptor.new(Mockdown::Component)
     parent.properties = {'x' => 10}

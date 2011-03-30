@@ -27,6 +27,11 @@ module Mockdown
     def self.get_property(name)
       return @@class_properties[name]
     end
+
+    # Retrieves a hash of all properties.
+    def self.get_properties()
+      return @@class_properties
+    end
     
     
     ####################################
@@ -81,6 +86,13 @@ module Mockdown
     # @param [Property] property  the property to add.
     def add_property(property)
       @properties[property.name] = property
+    end
+
+    # Adds a hash of properties to the component.
+    #
+    # @param [Property] hash  the hash of properties to add.
+    def add_properties(hash)
+      @properties.merge!(hash)
     end
 
     # Retrieves a property definition on the component.
