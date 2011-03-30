@@ -70,4 +70,50 @@ describe Mockdown::Component do
     child.parent.should be_nil
     @component.children.length.should == 0
   end
+
+
+  #####################################
+  # Display
+  #####################################
+  
+  it 'should explicitly set width' do
+    @component.width = 100
+    @component.measure()
+    @component.pixel_width.should == 100
+  end
+
+  it 'should limit minimum width' do
+    @component.width = 50
+    @component.min_width = 100
+    @component.measure()
+    @component.pixel_width.should == 100
+  end
+
+  it 'should limit maximum width' do
+    @component.width = 150
+    @component.max_width = 100
+    @component.measure()
+    @component.pixel_width.should == 100
+  end
+
+  
+  it 'should explicitly set height' do
+    @component.height = 100
+    @component.measure()
+    @component.pixel_height.should == 100
+  end
+
+  it 'should limit minimum height' do
+    @component.height = 50
+    @component.min_height = 100
+    @component.measure()
+    @component.pixel_height.should == 100
+  end
+
+  it 'should limit maximum height' do
+    @component.height = 150
+    @component.max_height = 100
+    @component.measure()
+    @component.pixel_height.should == 100
+  end
 end

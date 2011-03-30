@@ -43,6 +43,12 @@ module Mockdown
 
     add_property('width', 'integer')
     add_property('height', 'integer')
+
+    add_property('min_width', 'integer')
+    add_property('min_height', 'integer')
+
+    add_property('max_width', 'integer')
+    add_property('max_height', 'integer')
     
 
     ############################################################################
@@ -71,6 +77,17 @@ module Mockdown
 
     # The children attached to this component.
     attr_reader :children
+
+
+    ####################################
+    # Dimension
+    ####################################
+
+    # The width of the component, in pixels.
+    attr_accessor :pixel_width
+
+    # The height of the component, in pixels.
+    attr_accessor :pixel_height
 
 
     ############################################################################
@@ -147,14 +164,71 @@ module Mockdown
     end
 
 
+    ####################################
+    # Display
+    ####################################
+    
+    # Measures the component and sets the width and height.
+    def measure()
+      measure_explicit()
+      #measure_children()
+      #measure_implicit()
+    end
+    
+    # Lays out child components.
+    def layout()
+    end
+    
+    # Renders visual content to the display.
+    def render()
+    end
+    
+
     ############################################################################
     # Protected Methods
     ############################################################################
     
     protected
     
+    ####################################
+    # Properties
+    ####################################
+
     def initialize_properties()
       @properties.merge!(@@class_properties)
+    end
+
+
+    ####################################
+    # Display
+    ####################################
+
+    # Sets the pixel width and pixel height if the width and height are set
+    # explicitly on the component.
+    def measure_explicit()
+      if !width.nil?
+        self.pixel_width = limit(width, min_width, max_width)
+      end
+      
+      if !height.nil?
+        self.pixel_height = limit(height, min_height, max_height)
+      end
+    end
+
+
+    ####################################
+    # Utility
+    ####################################
+
+    # Limits a value within a given range.
+    def limit(value, min, max)
+      if !min.nil? && value < min
+        return min
+      elsif !max.nil? && value > max
+        return max
+      else
+        return value
+      end
     end
   end 
 end
