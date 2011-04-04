@@ -55,12 +55,17 @@ module Mockdown
     # Constructor
     ############################################################################
     
-    def initialize()
+    def initialize(options={})
       @properties = {}
       @property_values = {}
       @children = []
       
       initialize_properties()
+      
+      # Copy initializaion properties
+      options.each_pair do |k, v|
+        self.__send__ "#{k.to_s}=", v
+      end
     end
 
 
@@ -171,8 +176,8 @@ module Mockdown
     # Measures the component and sets the width and height.
     def measure()
       measure_explicit()
-      #measure_children()
-      #measure_implicit()
+      measure_children()
+      measure_implicit()
     end
     
     # Lays out child components.
@@ -212,6 +217,40 @@ module Mockdown
       
       if !height.nil?
         self.pixel_height = limit(height, min_height, max_height)
+      end
+    end
+
+    # Recursively invokes measurement on each child.
+    def measure_children()
+      children.each do |child|
+        child.measure()
+      end
+    end
+
+    # Measures the component as the largest dimensions of its children.
+    def measure_implicit()
+      # Implicitly measure width
+      if width.nil?
+        # Set width to largest child
+        w = children.map{|child| child.pixel_width}.max || 0
+        
+        # TODO: Add padding
+        # w = w + padding_left + padding_right
+			
+			  # Restrict min/max
+			  self.pixel_width = limit(w, min_width, max_width)
+      end
+
+      # Implicitly measure height
+      if height.nil?
+        # Set height to largest child
+        h = children.map{|child| child.pixel_height}.max || 0
+        
+        # TODO: Add padding
+        # h = h + padding_top + padding_bottom
+			
+			  # Restrict min/max
+			  self.pixel_height = limit(h, min_height, max_height)
       end
     end
 

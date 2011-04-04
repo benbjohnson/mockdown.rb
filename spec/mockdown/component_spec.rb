@@ -73,7 +73,7 @@ describe Mockdown::Component do
 
 
   #####################################
-  # Display
+  # Measure - Explicit
   #####################################
   
   it 'should explicitly set width' do
@@ -115,5 +115,77 @@ describe Mockdown::Component do
     @component.max_height = 100
     @component.measure()
     @component.pixel_height.should == 100
+  end
+
+
+  #####################################
+  # Measure - Children
+  #####################################
+  
+  it 'should measure children' do
+    child = Mockdown::Component.new()
+    child.width = 100
+    @component.add_child(child)
+    @component.measure()
+    child.pixel_width.should == 100
+  end
+
+
+  #####################################
+  # Measure - Implicit
+  #####################################
+  
+  it 'should implicitly measure width' do
+    @component.add_child(Mockdown::Component.new(:width => 100))
+    @component.add_child(Mockdown::Component.new())
+    @component.add_child(Mockdown::Component.new(:width => 300))
+    @component.measure()
+    @component.pixel_width.should == 300
+  end
+  
+  it 'should implicitly measure height' do
+    @component.add_child(Mockdown::Component.new(:height => 100))
+    @component.add_child(Mockdown::Component.new())
+    @component.add_child(Mockdown::Component.new(:height => 300))
+    @component.measure()
+    @component.pixel_height.should == 300
+  end
+
+  it 'should implicitly measure width as zero when no children' do
+    @component.measure()
+    @component.pixel_width.should == 0
+  end
+  
+  it 'should implicitly measure height as zero when no children' do
+    @component.measure()
+    @component.pixel_height.should == 0
+  end
+
+  it 'should restrict implicit width above minimum width' do
+    @component.min_width = 100
+    @component.add_child(Mockdown::Component.new(:width => 50))
+    @component.measure()
+    @component.pixel_width.should == 100
+  end
+
+  it 'should restrict implicit height above minimum height' do
+    @component.min_height = 100
+    @component.add_child(Mockdown::Component.new(:height => 50))
+    @component.measure()
+    @component.pixel_height.should == 100
+  end
+
+  it 'should restrict implicit width below maximum width' do
+    @component.max_width = 50
+    @component.add_child(Mockdown::Component.new(:width => 100))
+    @component.measure()
+    @component.pixel_width.should == 50
+  end
+
+  it 'should restrict implicit height below maximum height' do
+    @component.max_height = 50
+    @component.add_child(Mockdown::Component.new(:height => 100))
+    @component.measure()
+    @component.pixel_height.should == 50
   end
 end
