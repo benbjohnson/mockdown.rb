@@ -1,56 +1,10 @@
 require 'mockdown/component/property'
+require 'mockdown/component/property_registry'
 require 'mockdown/component/descriptor'
 
 module Mockdown
   # This class represents a visual object.
   class Component
-    ############################################################################
-    # Static Methods
-    ############################################################################
-    
-    @@class_properties = {}
-    
-    # Adds a property for a Ruby-based component class. Properties created with
-    # Mockdown should be added via add_property().
-    #
-    # @param [String] name  the name of the property.
-    # @param [String] type  the data type of the property.
-    def self.add_property(name, type)
-      @@class_properties[name] = Property.new(name, type)
-    end
-
-    # Retrieves a property declared by a Ruby class.
-    #
-    # @param [String] name  the name of the property to retrieve.
-    #
-    # @return [Property]  the property with the given name.
-    def self.get_property(name)
-      return @@class_properties[name]
-    end
-
-    # Retrieves a hash of all properties.
-    def self.get_properties()
-      return @@class_properties
-    end
-    
-    
-    ####################################
-    # Properties
-    ####################################
-
-    add_property('x', 'integer')
-    add_property('y', 'integer')
-
-    add_property('width', 'integer')
-    add_property('height', 'integer')
-
-    add_property('min_width', 'integer')
-    add_property('min_height', 'integer')
-
-    add_property('max_width', 'integer')
-    add_property('max_height', 'integer')
-    
-
     ############################################################################
     # Constructor
     ############################################################################
@@ -68,6 +22,23 @@ module Mockdown
       end
     end
 
+
+    ############################################################################
+    # Component Properties
+    ############################################################################
+
+    register_property('x', 'integer')
+    register_property('y', 'integer')
+
+    register_property('width', 'integer')
+    register_property('height', 'integer')
+
+    register_property('min_width', 'integer')
+    register_property('min_height', 'integer')
+
+    register_property('max_width', 'integer')
+    register_property('max_height', 'integer')
+    
 
     ############################################################################
     # Attributes
@@ -124,6 +95,13 @@ module Mockdown
     # @return [Property]  the property definition.
     def get_property(name)
       return @properties[name]
+    end
+
+    # Retrieves all the properties on the component.
+    #
+    # @return [Array]  all properties defined on this component.
+    def get_properties()
+      return @properties
     end
     
     # Proxies calls to the object's properties
@@ -199,8 +177,21 @@ module Mockdown
     # Properties
     ####################################
 
+    # Adds a properties from class-based components to the component instance.
     def initialize_properties()
-      @properties.merge!(@@class_properties)
+      # Find all superclasses
+      classes = []
+      clazz = self.class
+      while !clazz.nil?
+        classes << clazz
+        clazz = clazz.superclass
+      end
+      classes.reverse!
+      
+      # Add properties from each component class
+      classes.each do |clazz|
+        add_properties(PropertyRegistry.get_properties(clazz))
+      end
     end
 
 

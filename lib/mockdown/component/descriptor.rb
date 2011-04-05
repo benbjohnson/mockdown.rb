@@ -30,7 +30,7 @@ module Mockdown
       
       # The properties to set on a component that is instantiated from this
       # descriptor.
-      attr_accessor :properties
+      attr_accessor :property_values
       
       # A list of descriptors to be instantiated and added as children to a
       # component when created from this descriptor.
@@ -105,8 +105,19 @@ module Mockdown
       def get_property(name)
         if @properties[name]
           return @properties[name]
-        else
+        elsif parent.is_a?(Descriptor)
           return parent.get_property(name)
+        else
+          # Search class-based hierarchy
+          clazz = parent
+          while !clazz.nil?
+            property = PropertyRegistry.get_property(clazz, name)
+            if property
+              return property
+            end
+            
+            clazz = clazz.superclass
+          end
         end
       end
 
@@ -195,12 +206,12 @@ module Mockdown
         descriptor = self
         while !descriptor.nil?
           instance.add_properties(descriptor.get_properties())
-          descriptor = descriptor.is_a?(Descriptor) ? descriptor.parent : nil
+          descriptor = descriptor.parent.is_a?(Descriptor) ? descriptor.parent : nil
         end
         
         # Loop over properties and set them on instance
-        if properties
-          properties.each_pair do |key, value|
+        if property_values
+          property_values.each_pair do |key, value|
             instance.__send__("#{key.to_s}=", value)
           end
         end

@@ -48,7 +48,7 @@ describe Mockdown::Component::Descriptor do
   end
 
   it 'should set properties on component' do
-    @descriptor.properties = {'x' => 10, 'y' => 20}
+    @descriptor.property_values = {'x' => 10, 'y' => 20}
     instance = @descriptor.create()
     instance.x.should == 10
     instance.y.should == 20
@@ -68,9 +68,9 @@ describe Mockdown::Component::Descriptor do
 
   it 'should set properties on component from parent descriptor' do
     parent = Mockdown::Component::Descriptor.new(Mockdown::Component)
-    parent.properties = {'x' => 10}
+    parent.property_values = {'x' => 10}
     @descriptor.parent = parent
-    @descriptor.properties = {'y' => 20}
+    @descriptor.property_values = {'y' => 20}
     instance = @descriptor.create()
     instance.x.should == 10
     instance.y.should == 20
