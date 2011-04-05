@@ -68,8 +68,8 @@ module Mockdown
 end
 
 class Class
-  def register_property(name, type)
-    property = Mockdown::Component::Property.new(name, type)
+  def prop_accessor(name, type, options={})
+    property = Mockdown::Component::Property.new(name.to_s, type, options)
     Mockdown::Component::PropertyRegistry.register(self, property)
   end
 end

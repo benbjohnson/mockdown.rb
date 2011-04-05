@@ -27,17 +27,17 @@ module Mockdown
     # Component Properties
     ############################################################################
 
-    register_property('x', 'integer')
-    register_property('y', 'integer')
+    prop_accessor :x, 'integer', :default => 0
+    prop_accessor :y, 'integer', :default => 0
 
-    register_property('width', 'integer')
-    register_property('height', 'integer')
+    prop_accessor :width, 'integer'
+    prop_accessor :height, 'integer'
 
-    register_property('min_width', 'integer')
-    register_property('min_height', 'integer')
+    prop_accessor :min_width, 'integer'
+    prop_accessor :min_height, 'integer'
 
-    register_property('max_width', 'integer')
-    register_property('max_height', 'integer')
+    prop_accessor :max_width, 'integer'
+    prop_accessor :max_height, 'integer'
     
 
     ############################################################################
@@ -79,6 +79,7 @@ module Mockdown
     # @param [Property] property  the property to add.
     def add_property(property)
       @properties[property.name] = property
+      @property_values[property.name] ||= property.default
     end
 
     # Adds a hash of properties to the component.
@@ -86,6 +87,9 @@ module Mockdown
     # @param [Property] hash  the hash of properties to add.
     def add_properties(hash)
       @properties.merge!(hash)
+      hash.each_value do |property|
+        @property_values[property.name] ||= property.default
+      end
     end
 
     # Retrieves a property definition on the component.
@@ -225,9 +229,6 @@ module Mockdown
         # Set width to largest child
         w = children.map{|child| child.pixel_width}.max || 0
         
-        # TODO: Add padding
-        # w = w + padding_left + padding_right
-			
 			  # Restrict min/max
 			  self.pixel_width = Math.limit(w, min_width, max_width)
       end
@@ -237,9 +238,6 @@ module Mockdown
         # Set height to largest child
         h = children.map{|child| child.pixel_height}.max || 0
         
-        # TODO: Add padding
-        # h = h + padding_top + padding_bottom
-			
 			  # Restrict min/max
 			  self.pixel_height = Math.limit(h, min_height, max_height)
       end

@@ -20,7 +20,7 @@ module Mockdown
       # Constructor
       ##########################################################################
     
-      def initialize(name, type)
+      def initialize(name, type, options={})
         # Validate type
         if !Property.valid_type?(type)
           raise StandardError.new("Invalid data type for '#{name}' property: #{type}")
@@ -28,6 +28,7 @@ module Mockdown
         
         @name = name
         @type = type
+        @default = options.delete(:default)
       end
       
 
@@ -40,6 +41,9 @@ module Mockdown
       
       # The data type of the property.
       attr_reader :type
+
+      # The default value of the property.
+      attr_reader :default
       
       
       ##########################################################################

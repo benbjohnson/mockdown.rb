@@ -34,6 +34,12 @@ describe Mockdown::Component do
     @component.foo.should == 'bar'
   end
   
+  it 'should set default property value' do
+    property = Mockdown::Component::Property.new('foo', 'string', :default => 12)
+    @component.add_property(property)
+    @component.foo.should == 12
+  end
+
   it 'should throw error when getting non-existant property' do
     expect {x = @component.foo}.
       to raise_error(StandardError, 'Property does not exist on component: foo')
