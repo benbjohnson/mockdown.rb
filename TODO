@@ -1,5 +1,6 @@
 - Add row layout
 - Add col layout
+- Add composite properties
 - Add basic render
 - Add command line renderer
 - Add container classes

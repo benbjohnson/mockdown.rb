@@ -203,11 +203,11 @@ module Mockdown
     # explicitly on the component.
     def measure_explicit()
       if !width.nil?
-        self.pixel_width = limit(width, min_width, max_width)
+        self.pixel_width = Math.limit(width, min_width, max_width)
       end
       
       if !height.nil?
-        self.pixel_height = limit(height, min_height, max_height)
+        self.pixel_height = Math.limit(height, min_height, max_height)
       end
     end
 
@@ -229,7 +229,7 @@ module Mockdown
         # w = w + padding_left + padding_right
 			
 			  # Restrict min/max
-			  self.pixel_width = limit(w, min_width, max_width)
+			  self.pixel_width = Math.limit(w, min_width, max_width)
       end
 
       # Implicitly measure height
@@ -241,23 +241,7 @@ module Mockdown
         # h = h + padding_top + padding_bottom
 			
 			  # Restrict min/max
-			  self.pixel_height = limit(h, min_height, max_height)
-      end
-    end
-
-
-    ####################################
-    # Utility
-    ####################################
-
-    # Limits a value within a given range.
-    def limit(value, min, max)
-      if !min.nil? && value < min
-        return min
-      elsif !max.nil? && value > max
-        return max
-      else
-        return value
+			  self.pixel_height = Math.limit(h, min_height, max_height)
       end
     end
   end 
