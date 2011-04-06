@@ -128,6 +128,7 @@ describe Mockdown::Component::Property do
   it 'should parse length' do
     @length_property.set_value(@component, '10px')
     @component.get_raw_property_value('foo').should == 10
+    @length_property.get_value(@component).should == '10px'
   end
 
   it 'should parse integer to length' do

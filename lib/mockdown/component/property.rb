@@ -83,8 +83,8 @@ module Mockdown
         when 'integer' then raw_value
         when 'decimal' then raw_value
         when 'length' then "#{raw_value}px"
-        when 'color' then "##{raw_value}"
-        when 'percent' then "#{(raw_value*100).to_f}%"
+        when 'color' then sprintf('#%06x', raw_value)
+        when 'percent' then "#{(raw_value*100).to_i}%"
         end
       end
 
@@ -108,7 +108,7 @@ module Mockdown
         when 'decimal' then !value.match(/^-?\d+(\.\d+)?$/).nil?
         when 'length' then !value.match(/^-?\d+(px)?$/).nil?
         when 'color' then !value.match(/^#[0-9A-F]{6}$/i).nil?
-        when 'percent' then !value.match(/^-?\d+(\.\d+)?%$/).nil?
+        when 'percent' then !value.match(/^-?\d+%$/).nil?
         end
       end
     end

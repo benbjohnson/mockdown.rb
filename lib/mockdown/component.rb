@@ -1,4 +1,5 @@
 require 'mockdown/component/property'
+require 'mockdown/component/composite_property'
 require 'mockdown/component/property_registry'
 require 'mockdown/component/descriptor'
 

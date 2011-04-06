@@ -35,10 +35,11 @@ module Mockdown
       # @return  the value converted to this property's data type.
       def set_value(owner, value)
         values = value.to_s.split(/ +/)
+
         @properties.each_index do |index|
           property_name = @properties[index]
           break if index > values.length-1
-          owner.set_raw_property_value(property_name, values[index])
+          owner.set_property_value(property_name, values[index])
         end
       end
 
@@ -48,13 +49,13 @@ module Mockdown
       #
       # @return  the formatted value.
       def get_value(owner)
-        raw_value = owner.get_raw_property_value(name)
-
-        case type
-        when 'string' then return raw_value
-        when 'integer' then return raw_value
-        when 'decimal' then return raw_value
+        values = []
+        
+        @properties.each do |property_name|
+          values << owner.get_property_value(property_name)
         end
+        
+        return values.join(' ')
       end
 
       # Checks if a given string value valid for the property's data type.
