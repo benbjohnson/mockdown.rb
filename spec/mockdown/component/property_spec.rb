@@ -12,6 +12,7 @@ describe Mockdown::Component::Property do
     @decimal_property = Mockdown::Component::Property.new('foo', 'decimal')
     @length_property = Mockdown::Component::Property.new('foo', 'length')
     @color_property = Mockdown::Component::Property.new('foo', 'color')
+    @percent_property = Mockdown::Component::Property.new('foo', 'percent')
   end
 
 
@@ -33,6 +34,18 @@ describe Mockdown::Component::Property do
 
   it 'should validate decimal type' do
     Mockdown::Component::Property.valid_type?('decimal').should be_true
+  end
+
+  it 'should validate length type' do
+    Mockdown::Component::Property.valid_type?('length').should be_true
+  end
+
+  it 'should validate color type' do
+    Mockdown::Component::Property.valid_type?('color').should be_true
+  end
+
+  it 'should validate percent type' do
+    Mockdown::Component::Property.valid_type?('percent').should be_true
   end
 
   it 'should not validate invalid property type' do
@@ -126,6 +139,21 @@ describe Mockdown::Component::Property do
   it 'should parse color' do
     @color_property.set_value(@component, '#FF00FF')
     @component.get_raw_property_value('foo').should == 16_711_935
+  end
+
+  it 'should parse percent' do
+    @percent_property.set_value(@component, '20%')
+    @component.get_raw_property_value('foo').should == 0.2
+  end
+
+  it 'should parse integer to percent' do
+    @percent_property.set_value(@component, '20')
+    @component.get_raw_property_value('foo').should == 0.2
+  end
+
+  it 'should not parse invalid percent' do
+    @percent_property.set_value(@component, 'foo')
+    @component.get_raw_property_value('foo').should == 0
   end
 
 

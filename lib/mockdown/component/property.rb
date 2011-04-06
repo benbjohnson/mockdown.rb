@@ -6,7 +6,7 @@ module Mockdown
       # Static Methods
       ##########################################################################
       
-      @@types = ['string', 'integer', 'decimal', 'length', 'color']
+      @@types = ['string', 'integer', 'decimal', 'length', 'color', 'percent']
       
       # Determines if the type is a standard type.
       #
@@ -64,6 +64,7 @@ module Mockdown
         when 'decimal' then value.to_f
         when 'length' then value.to_i
         when 'color' then value[1..-1].to_i(16)
+        when 'percent' then value.to_f/100
         end
 
         owner.set_raw_property_value(name, raw_value)
@@ -83,6 +84,7 @@ module Mockdown
         when 'decimal' then raw_value
         when 'length' then "#{raw_value}px"
         when 'color' then "##{raw_value}"
+        when 'percent' then "#{(raw_value*100).to_f}%"
         end
       end
 
@@ -106,6 +108,7 @@ module Mockdown
         when 'decimal' then !value.match(/^-?\d+(\.\d+)?$/).nil?
         when 'length' then !value.match(/^-?\d+(px)?$/).nil?
         when 'color' then !value.match(/^#[0-9A-F]{6}$/i).nil?
+        when 'percent' then !value.match(/^-?\d+(\.\d+)?%$/).nil?
         end
       end
     end
