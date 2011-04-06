@@ -117,8 +117,65 @@ describe Mockdown::Component::Row do
 
 
   #####################################
-  # Position
+  # Horizontal Position
   #####################################
   
+  it 'should left align children' do
+    @row.update_properties(:align => 'left', :width => 200, :gap => 5, :padding_left => 6, :padding_right => 4)
+    @row.measure()
+    @row.layout()
+    @a.x.should == 6
+    @b.x.should == 21
+    @c.x.should == 56
+  end
   
+  it 'should center align children' do
+    @row.update_properties(:align => 'center', :width => 200, :gap => 5, :padding_left => 6, :padding_right => 4)
+    @row.measure()
+    @row.layout()
+    @a.x.should == 51
+    @b.x.should == 66
+    @c.x.should == 101
+  end
+  
+  it 'should right align children' do
+    @row.update_properties(:align => 'right', :width => 200, :gap => 5, :padding_left => 6, :padding_right => 4)
+    @row.measure()
+    @row.layout()
+    @a.x.should == 96
+    @b.x.should == 111
+    @c.x.should == 146
+  end
+
+
+  #####################################
+  # Vertical Position
+  #####################################
+  
+  it 'should top align children' do
+    @row.update_properties(:valign => 'top', :height => 200, :gap => 5, :padding_top => 6, :padding_bottom => 4)
+    @row.measure()
+    @row.layout()
+    @a.y.should == 6
+    @b.y.should == 6
+    @c.y.should == 6
+  end
+
+  it 'should middle align children' do
+    @row.update_properties(:valign => 'middle', :height => 200, :gap => 5, :padding_top => 6, :padding_bottom => 4)
+    @row.measure()
+    @row.layout()
+    @a.y.should == 91
+    @b.y.should == 81
+    @c.y.should == 71
+  end
+
+  it 'should bottom align children' do
+    @row.update_properties(:valign => 'bottom', :height => 200, :gap => 5, :padding_top => 6, :padding_bottom => 4)
+    @row.measure()
+    @row.layout()
+    @a.y.should == 176
+    @b.y.should == 156
+    @c.y.should == 136
+  end
 end

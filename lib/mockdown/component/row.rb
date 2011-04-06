@@ -8,7 +8,7 @@ module Mockdown
       
       def layout()
         layout_percent_children()
-        #layout_child_positions()
+        layout_child_positions()
         super()
       end
 
@@ -52,6 +52,7 @@ module Mockdown
       # Layout
       #################################
 
+      # Lays out the variable width children.
       def layout_percent_children()
         last_percent_child = nil
         
@@ -92,6 +93,42 @@ module Mockdown
         # Add remaining pixels to last percentage child
         if !last_percent_child.nil? && remaining != 0
           last_percent_child += remaining
+        end
+      end
+      
+      
+      # Calculates x and y positions for each child.
+      def layout_child_positions()
+        # Calculate total width + gap
+        total = children.inject(0) {|memo, child| memo+(child.pixel_width||0)}
+        total += gap * (children.length-1)
+        
+        # Position children
+        pos = 0
+        
+        children.each do |child|
+          # X Position
+          child.x = case align
+          when 'right' then
+            pixel_width - total - padding_right + pos;
+          when 'center' then
+				    (((pixel_width-padding_left-padding_right).to_f/2) - (total.to_f/2) + pos + padding_left).round;
+          else
+				    padding_left + pos;
+          end
+
+          # Y Position
+          child.y = case valign
+          when 'bottom' then
+            pixel_height - padding_bottom - child.pixel_height;
+          when 'middle' then
+				    (((pixel_height-padding_top-padding_bottom).to_f/2) - (child.pixel_height.to_f/2) + padding_top).round;
+          else
+				    padding_top
+          end
+
+    			# Increment current position by child width and gap
+    			pos += child.pixel_width + gap;
         end
       end
     end
