@@ -92,7 +92,7 @@ module Mockdown
 
         # Add remaining pixels to last percentage child
         if !last_percent_child.nil? && remaining != 0
-          last_percent_child += remaining
+          last_percent_child.pixel_width += remaining
         end
       end
       

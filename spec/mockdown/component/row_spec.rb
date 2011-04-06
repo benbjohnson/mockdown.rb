@@ -58,7 +58,7 @@ describe Mockdown::Component::Row do
     @row.pixel_width.should == 50
   end
 
-  it 'should implicitly set width to largest child' do
+  it 'should implicitly set height to largest child' do
     @row.measure()
     @row.pixel_height.should == 60
   end
