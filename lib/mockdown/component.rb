@@ -112,7 +112,7 @@ module Mockdown
     # Updates multiple property values with a hash.
     def update_properties(hash)
       hash.each_pair do |k, v|
-        self.__send__ "#{k.to_s}=", v
+        self.set_property_value(k.to_s, v)
       end
     end
     
@@ -122,23 +122,64 @@ module Mockdown
       property_name = sym.to_s
       accessor = (property_name[-1..-1] != "=")
       property_name.chop! unless accessor
-      property = @properties[property_name]
       
-      # If the property exists, use it.
-      if property
-        if accessor
-          return @property_values[property_name]
-        else
-          value = *args
-          @property_values[property_name] = property.parse(value)
-        end
-        
-      # Otherwise throw an error
+      if accessor
+        return get_property_value(property_name)
       else
-        raise StandardError.new("Property does not exist on component: #{property_name}")
+        value = *args
+        return set_property_value(property_name, value)
       end
     end
     
+    ####################################
+    # Properties Values
+    ####################################
+    
+    # Retrieves the value of a property.
+    #
+    # @param [String] name  the name of the property.
+    #
+    # @return               the value set to the property.
+    def get_property_value(name)
+      property = @properties[name]
+      if property
+        return property.get_value(self)
+      else
+        raise StandardError.new("Property does not exist on component: #{name}")
+      end
+    end
+    
+    # Sets the value of a property.
+    #
+    # @param [String] name   the name of the property.
+    # @param [Object] value  the value.
+    def set_property_value(name, value)
+      property = @properties[name]
+      if property
+        property.set_value(self, value)
+      else
+        raise StandardError.new("Property does not exist on component: #{name}")
+      end
+    end
+
+    
+    # Retrieves the raw, unformatted property value.
+    #
+    # @param [String] name  the name of the property.
+    #
+    # @return               the unformatted value set to the property.
+    def get_raw_property_value(name)
+      return @property_values[name]
+    end
+    
+    # Sets the raw, unformatted property value.
+    #
+    # @param [String] name   the name of the property.
+    # @param [Object] value  the raw value.
+    def set_raw_property_value(name, value)
+      @property_values[name] = value
+    end
+
     
     ####################################
     # Children

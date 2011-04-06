@@ -140,12 +140,12 @@ module Mockdown
         end
 
         # Throw error if property is not valid
-        if !property.valid_input?(value)
+        if !property.valid_input?(self, value)
           raise StandardError.new("Invalid #{property.type} value for '#{name}': '#{value}'")
         end
 
         # Set the property value
-        @property_values[name] = property.parse(value)
+        property.set_value(self, value)
       end
 
       # Retrieves the value of a property.
@@ -162,6 +162,24 @@ module Mockdown
         end
 
         # Return the property value
+        property.get_value(self)
+      end
+
+
+      # Sets the raw value of a property.
+      #
+      # @param [String] name   the name of the property to set.
+      # @param [String] value  the raw value to set.
+      def set_raw_property_value(name, value)
+        @property_values[name] = value
+      end
+
+      # Retrieves the raw value of a property.
+      #
+      # @param [String] name   the name of the property to retrieve.
+      #
+      # @return [Object]  the raw value that has been set for a given property.
+      def get_raw_property_value(name)
         return @property_values[name]
       end
 
