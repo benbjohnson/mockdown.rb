@@ -17,9 +17,7 @@ module Mockdown
       initialize_properties()
       
       # Copy initializaion properties
-      options.each_pair do |k, v|
-        self.__send__ "#{k.to_s}=", v
-      end
+      update_properties(options)
     end
 
 
@@ -32,6 +30,9 @@ module Mockdown
 
     prop_accessor :width, 'integer'
     prop_accessor :height, 'integer'
+
+    prop_accessor :percent_width, 'integer'
+    prop_accessor :percent_height, 'integer'
 
     prop_accessor :min_width, 'integer'
     prop_accessor :min_height, 'integer'
@@ -106,6 +107,13 @@ module Mockdown
     # @return [Array]  all properties defined on this component.
     def get_properties()
       return @properties
+    end
+
+    # Updates multiple property values with a hash.
+    def update_properties(hash)
+      hash.each_pair do |k, v|
+        self.__send__ "#{k.to_s}=", v
+      end
     end
     
     # Proxies calls to the object's properties

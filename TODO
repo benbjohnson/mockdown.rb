@@ -1,5 +1,9 @@
 - Add row layout
+  - Position children
+
 - Add col layout
+  - Copy over row layout methods
+
 - Add composite properties
 - Add basic render
 - Add command line renderer

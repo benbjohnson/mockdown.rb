@@ -25,7 +25,7 @@ describe Mockdown::Component::Row do
   ##############################################################################
 
   #####################################
-  # Layout
+  # Measurement
   #####################################
 
   it 'should implicitly set width to sum of children' do
@@ -81,4 +81,44 @@ describe Mockdown::Component::Row do
     @row.measure()
     @row.pixel_height.should == 50
   end
+
+
+  #####################################
+  # Layout
+  #####################################
+
+  it 'should layout percent width children' do
+    @a.update_properties(:width => nil, :percent_width => 20)
+    @b.update_properties(:width => nil, :percent_width => 40)
+    @row.width = 220
+    @row.gap = 5
+    @row.padding_left = 6
+    @row.padding_right = 4
+    @row.measure()
+    @row.layout()
+    @a.pixel_width.should == 50
+    @b.pixel_width.should == 100
+    @c.pixel_width.should == 50
+  end
+
+  it 'should layout percent height children' do
+    @a.update_properties(:height => nil, :percent_height => 20)
+    @b.update_properties(:height => nil, :percent_height => 40)
+    @row.height = 210
+    @row.gap = 5
+    @row.padding_top = 6
+    @row.padding_bottom = 4
+    @row.measure()
+    @row.layout()
+    @a.pixel_height.should == 40
+    @b.pixel_height.should == 80
+    @c.pixel_height.should == 60
+  end
+
+
+  #####################################
+  # Position
+  #####################################
+  
+  
 end
