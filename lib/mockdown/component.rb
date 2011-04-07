@@ -3,6 +3,8 @@ require 'mockdown/component/composite_property'
 require 'mockdown/component/property_registry'
 require 'mockdown/component/descriptor'
 
+java_import 'java.awt.image.BufferedImage'
+
 module Mockdown
   # This class represents a visual object.
   class Component
@@ -216,8 +218,24 @@ module Mockdown
     def layout()
     end
     
-    # Renders visual content to the display.
+    # Sets up the visual context and calls the draw method
     def render()
+      # Create display and graphics context
+      image = BufferedImage.new(
+        pixel_width, pixel_height, BufferedImage::TYPE_INT_ARGB
+      )
+      graphics = image.createGraphics()
+      
+      # Delegate drawing to separate method
+      draw(graphics)
+      
+      return image
+    end
+    
+    # Draws the component to the display context.
+    #
+    # @param [Graphics2D] g  the graphics context.
+    def draw(g)
     end
     
 

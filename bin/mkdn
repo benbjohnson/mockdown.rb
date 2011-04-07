@@ -12,14 +12,22 @@ program :version, Mockdown::VERSION
 program :description, 'Mockups for hackers.'
 
 ################################################################################
-# Testing
+# Render
 ################################################################################
 
-command :test do |c|
-  c.syntax = 'grapevine test'
-  c.description = 'Test run.'
+command :render do |c|
+  c.syntax = 'mkdn render INPUT OUTPUT'
+  c.description = 'Renders a Mockdown file to an image.'
   c.when_called do|args, options|
-    parser = Mockdown::Parser.new()
-    parser.parse("    ")
+    input, output = *args
+    raise 'Input file is required' if input.nil?
+
+    # Create image in same place with same name if output not specified
+    if output.nil?
+      output = input.gsub(/\.\w+$/, '.png')
+    end
+    
+    renderer = Mockdown::Renderer.new()
+    renderer.render(input, output)
   end
 end
