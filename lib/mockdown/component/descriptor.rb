@@ -230,7 +230,7 @@ module Mockdown
         # Loop over properties and set them on instance
         if property_values
           property_values.each_pair do |key, value|
-            instance.__send__("#{key.to_s}=", value)
+            instance.set_raw_property_value(key, value)
           end
         end
       end

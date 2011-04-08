@@ -20,6 +20,7 @@ module Mockdown
     # @param [String] input  the Mockdown file.
     # @param [Hash] output   the output file to render to.
     def render(input, output)
+
       # Determine root folder and filename
       name = File.basename(input, '.mkd')
       root = File.dirname(File.expand_path(input))

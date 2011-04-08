@@ -124,9 +124,12 @@ module Mockdown
       # Determine the property name and if it is a setter
       property_name = sym.to_s
       accessor = (property_name[-1..-1] != "=")
-      property_name.chop! unless accessor
+      raw = (property_name[-1..-1] == "!")
+      property_name.chop! if !accessor || raw
       
-      if accessor
+      if raw
+        return get_raw_property_value(property_name)
+      elsif accessor
         return get_property_value(property_name)
       else
         value = *args
@@ -224,7 +227,7 @@ module Mockdown
       image = BufferedImage.new(
         pixel_width, pixel_height, BufferedImage::TYPE_INT_ARGB
       )
-      graphics = image.createGraphics()
+      graphics = image.getGraphics()
       
       # Delegate drawing to separate method
       draw(graphics)
@@ -313,6 +316,7 @@ module Mockdown
   end 
 end
 
+require 'mockdown/component/border'
 require 'mockdown/component/container'
 require 'mockdown/component/row'
 require 'mockdown/component/column'

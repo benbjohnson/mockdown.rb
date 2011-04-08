@@ -57,6 +57,13 @@ describe Mockdown::Component do
     @component.get_property('height').should_not be_nil
   end
 
+  it 'should retrieve raw value from property with bang' do
+    @component.add_property(Mockdown::Component::Property.new('foo', 'length'))
+    @component.foo = "1px"
+    @component.foo.should == "1px"
+    @component.foo!.should == 1
+  end
+
   
   #####################################
   # Children

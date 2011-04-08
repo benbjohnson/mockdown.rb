@@ -1,6 +1,8 @@
 ## IMMEDIATE
 - Add border styles
 - Add background styles
+- Abstract display object to use a single BufferedImage and Graphics2D.
+- Add text component ??
 - Add array property types
 - Add project library path to loader
 
@@ -8,4 +10,4 @@
 
 ## FUTURE
 - Add HTML -> Mockdown converter.
-  - Add ability to scrape whole site and create components out of reusable content.
+  - Add ability to scrape whole site and generalize components out common content.

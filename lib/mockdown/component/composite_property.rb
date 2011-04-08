@@ -68,15 +68,20 @@ module Mockdown
           raise StandardError.new("Cannot validate null value")
         end
         
-        # Convert to string first
-        value = value.to_s
-        
-        # Match depending on type
-        case type
-        when 'string' then true
-        when 'integer' then !value.match(/^-?\d+?$/).nil?
-        when 'decimal' then !value.match(/^-?\d+(\.\d+)?$/).nil?
+        # Check each property for validity
+        values = value.to_s.split(/ +/)
+
+        @properties.each_index do |index|
+          property_name = @properties[index]
+          property = owner.get_property(property_name)
+          break if index > values.length-1
+
+          if !property.valid_input?(owner, values[index])
+            return false
+          end
         end
+        
+        return true
       end
     end
   end 

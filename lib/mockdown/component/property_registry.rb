@@ -72,4 +72,9 @@ class Class
     property = Mockdown::Component::Property.new(name.to_s, type, options)
     Mockdown::Component::PropertyRegistry.register(self, property)
   end
+
+  def composite_prop_accessor(name, format, options={})
+    property = Mockdown::Component::CompositeProperty.new(name.to_s, format, options)
+    Mockdown::Component::PropertyRegistry.register(self, property)
+  end
 end
