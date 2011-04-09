@@ -5,7 +5,7 @@ require 'mockdown/parser/builder'
 module Mockdown
   class Parser
     
-# line 140 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 142 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 
     
     def initialize()
@@ -95,6 +95,15 @@ self._parser_trans_actions = [
 ]
 
 class << self
+	attr_accessor :_parser_eof_actions
+	private :_parser_eof_actions, :_parser_eof_actions=
+end
+self._parser_eof_actions = [
+	0, 0, 0, 0, 5, 0, 0, 0, 
+	0, 12, 0
+]
+
+class << self
 	attr_accessor :parser_start
 end
 self.parser_start = 1;
@@ -113,7 +122,7 @@ end
 self.parser_en_main = 1;
 
 
-# line 145 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 147 "/projects/benbjohnson/mockdown/ragel/parser.rl"
     end
 
     # Parses the given data into a mockdown structure
@@ -128,16 +137,16 @@ self.parser_en_main = 1;
       eof = pe = data.length
 
       
-# line 132 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+# line 141 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 begin
 	p ||= 0
 	pe ||= data.length
 	cs = parser_start
 end
 
-# line 159 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 161 "/projects/benbjohnson/mockdown/ragel/parser.rl"
       
-# line 141 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+# line 150 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 begin
 	_klen, _trans, _keys, _acts, _nacts = nil
 	_goto_level = 0
@@ -232,7 +241,7 @@ when 1 then
         level = indentation/2
 					end
 when 2 then
-# line 110 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 111 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
         name = data[@position...p].pack("c*")
@@ -240,26 +249,26 @@ when 2 then
         builder.add(descriptor, level)
 					end
 when 3 then
-# line 116 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 117 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
         property_name = data[@position...p].pack("c*")
         property_name.gsub!('-', '_')
 					end
 when 4 then
-# line 121 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 122 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
         property_value = data[@position...p].pack("c*")
         property_value = property_value[1..-2]    # Strip quotes
 					end
 when 5 then
-# line 126 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 128 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
         descriptor.set_property_value(property_name, property_value)
 					end
-# line 263 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+# line 273 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 			end # action switch
 		end
 	end
@@ -279,6 +288,42 @@ when 5 then
 	end
 	end
 	if _goto_level <= _test_eof
+	if p == eof
+	__acts = _parser_eof_actions[cs]
+	__nacts =  _parser_actions[__acts]
+	__acts += 1
+	while __nacts > 0
+		__nacts -= 1
+		__acts += 1
+		case _parser_actions[__acts - 1]
+when 2 then
+# line 111 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+		begin
+
+        name = data[@position...p].pack("c*")
+        descriptor = @loader.find(name)
+        builder.add(descriptor, level)
+					end
+when 4 then
+# line 122 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+		begin
+
+        property_value = data[@position...p].pack("c*")
+        property_value = property_value[1..-2]    # Strip quotes
+					end
+when 5 then
+# line 128 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+		begin
+
+        descriptor.set_property_value(property_name, property_value)
+					end
+# line 323 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+		end # eof action switch
+	end
+	if _trigger_goto
+		next
+	end
+end
 	end
 	if _goto_level <= _out
 		break
@@ -286,7 +331,7 @@ when 5 then
 	end
 	end
 
-# line 160 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 162 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 
       # Raise error if parser does not complete
       if p != pe

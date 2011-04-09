@@ -13,7 +13,7 @@ module Mockdown
         end
         
         @name = name
-        @properties = format.split(' ').map{|property| property.split(/,/)}
+        @properties = format.split(/ /).map{|property| property.split(/,/)}
         @default = options.delete(:default)
       end
       
@@ -40,7 +40,7 @@ module Mockdown
       # @return  the value converted to this property's data type.
       def set_value(owner, value)
         values = value.to_s.split(/ +/)
-
+        
         @properties.each_index do |index|
           break if index > values.length-1
           subproperties = @properties[index]

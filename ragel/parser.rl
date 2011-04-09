@@ -38,10 +38,10 @@ module Mockdown
 			
 			EOL = '\n';
 			Indentation = ((' '*) >mark) %store_indent;
-			Component_Name = ([a-z] [\-a-z0-9]*) >mark %begin_component;
+			Component_Name = ([a-z] [\-a-z0-9]*) >mark %begin_component %eof(begin_component);
 			Property_Name = ([a-z] [\-a-z0-9]*) >mark %store_property_name;
-			Property_Value = ('"' (print - '"')* '"') >mark %store_property_value;
-			Property = (Property_Name '=' Property_Value) %store_property;
+			Property_Value = ('"' (print - '"')* '"') >mark %store_property_value %eof(store_property_value);
+			Property = (Property_Name '=' Property_Value) %store_property %eof(store_property);
       Properties = (Property ' '*)*;
 			Line = Indentation '%' Component_Name (' '+ Properties EOL | EOL);
       

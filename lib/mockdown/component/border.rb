@@ -5,13 +5,7 @@ module Mockdown
     # Component Properties
     ############################################################################
 
-    composite_prop_accessor :border, 
-      [
-        'border_top',
-        'border_bottom',
-        'border_left',
-        'border_right'
-      ]
+    composite_prop_accessor :border, 'border_thickness border_color border_alpha'
 
     composite_prop_accessor :border_thickness, 
       [
