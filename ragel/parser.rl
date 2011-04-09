@@ -11,22 +11,20 @@ module Mockdown
 			}
 
 			action store_indent {
-        @last_indent = @indent
-        @indent = data[@position...p].pack("c*")
+			  # TODO: Add check for uneven number of spaces
+			  indentation = p-@position
+        level = indentation/2
 			}
 
 			action begin_component {
         name = data[@position...p].pack("c*")
-        @descriptor = @loader.find(name)
+        descriptor = @loader.find(name)
+        builder.add(descriptor, level)
 			}
 			
-			action store_component {
-        level = @indent.length/2
-        builder.add(@descriptor, level)
-			}
-
 			action store_property_name {
         property_name = data[@position...p].pack("c*")
+        property_name.gsub!('-', '_')
 			}
 
 			action store_property_value {
@@ -35,19 +33,19 @@ module Mockdown
 			}
 			
 			action store_property {
-        @descriptor.set_property_value(property_name, property_value)
+        descriptor.set_property_value(property_name, property_value)
 			}
 			
 			EOL = '\n';
 			Indentation = ((' '*) >mark) %store_indent;
-			Component_Name = ([\a-z] [\-a-z0-9]*) >mark %begin_component;
-			Property_Name = ([\a-z] [\-a-z0-9]+) >mark %store_property_name;
-			Property_Value = ('"' . [^"]+ . '"') >mark %store_property_value;
-			Property = (Property_Name . '=' . Property_Value) %store_property;
-			Component = ('%' Component_Name . (' '+ . Property)* . ' '*) %store_component;
-			Line = Indentation Component? :> EOL?;
-
-			main := Line;
+			Component_Name = ([a-z] [\-a-z0-9]*) >mark %begin_component;
+			Property_Name = ([a-z] [\-a-z0-9]*) >mark %store_property_name;
+			Property_Value = ('"' (print - '"')* '"') >mark %store_property_value;
+			Property = (Property_Name '=' Property_Value) %store_property;
+      Properties = (Property ' '*)*;
+			Line = Indentation '%' Component_Name (' '+ Properties EOL | EOL);
+      
+			main := Line+;
     }%%
     
     def initialize()
@@ -71,7 +69,8 @@ module Mockdown
 
       # Raise error if parser does not complete
       if p != pe
-        raise StandardError.new("Unexpected character at character #{p}: '#{data[p].chr}'")
+        info = get_char_info(data, p)
+        raise StandardError.new("Unexpected '#{info[:char]}' at line #{info[:line]}, char #{info[:pos]}")
       end
       
       return builder.descriptor
@@ -85,6 +84,23 @@ module Mockdown
     # Adds a component to the current descriptor
     def add_component(name, level)
       descriptor = @loader.find(name)
+    end
+    
+    # Determines the line, position and character at a given position in the data.
+    def get_char_info(data, p)
+      lines = data[0..p].pack('c*').split("\n")
+      
+      char = data[p].chr
+      char = '<space>' if char == ' '
+      char = '<newline>' if char == "\n"
+      char = '<tab>' if char == "\t"
+      
+      info = {
+        :line => lines.length,
+        :pos => lines[-1].length,
+        :char => char
+      }
+      return info
     end
   end
 end

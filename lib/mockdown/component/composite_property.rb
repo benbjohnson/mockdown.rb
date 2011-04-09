@@ -7,8 +7,13 @@ module Mockdown
       ##########################################################################
     
       def initialize(name, format, options={})
+        # Change array-based formats into a multi-property format
+        if format.is_a?(Array)
+          format = format.join(',')
+        end
+        
         @name = name
-        @properties = format.split(' ')
+        @properties = format.split(' ').map{|property| property.split(/,/)}
         @default = options.delete(:default)
       end
       
@@ -37,13 +42,18 @@ module Mockdown
         values = value.to_s.split(/ +/)
 
         @properties.each_index do |index|
-          property_name = @properties[index]
           break if index > values.length-1
-          owner.set_property_value(property_name, values[index])
+          subproperties = @properties[index]
+
+          subproperties.each do |subproperty|
+            owner.set_property_value(subproperty, values[index])
+          end
         end
       end
 
-      # Retrieves and formats a value into the data type of this property.
+      # Retrieves and formats a value into the data type of this property. If
+      # a multi-value property is used, all subvalues must be the same to return
+      # a value. If they are different then a blank string is returned.
       #
       # @param [Object] owner  the owner of this property.
       #
@@ -51,8 +61,16 @@ module Mockdown
       def get_value(owner)
         values = []
         
-        @properties.each do |property_name|
-          values << owner.get_property_value(property_name)
+        # If any subvalues do not all equal each other, return a blank string back
+        @properties.each do |subproperties|
+          subvalue = nil
+          subproperties.each do |subproperty|
+            value = owner.get_property_value(subproperty)
+            subvalue ||= value
+            return "" if value == '' || subvalue != value
+          end
+
+          values << subvalue
         end
         
         return values.join(' ')
@@ -72,12 +90,15 @@ module Mockdown
         values = value.to_s.split(/ +/)
 
         @properties.each_index do |index|
-          property_name = @properties[index]
-          property = owner.get_property(property_name)
           break if index > values.length-1
+          subproperties = @properties[index]
 
-          if !property.valid_input?(owner, values[index])
-            return false
+          subproperties.each do |subproperty|
+            property = owner.get_property(subproperty)
+
+            if !property.valid_input?(owner, values[index])
+              return false
+            end
           end
         end
         

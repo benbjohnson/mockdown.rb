@@ -30,7 +30,7 @@ describe Mockdown::Parser do
   it 'should parse property values' do
     descriptor = @parser.parse(
       <<-BLOCK.unindent
-      %row width="100" height="200" 
+      %row width="100" height="200"
       BLOCK
     )
     descriptor.get_property_value('width').should == 100
@@ -46,5 +46,17 @@ describe Mockdown::Parser do
       )
     end.
       to raise_error(StandardError, "Invalid integer value for 'width': 'foo'")
+  end
+
+  it 'should parse a multiline component' do
+    descriptor = @parser.parse(
+      <<-BLOCK.unindent
+      %row
+        %col
+        %col
+      BLOCK
+    )
+    descriptor.parent.should == Mockdown::Component::Row
+    descriptor.children.length.should == 2
   end
 end

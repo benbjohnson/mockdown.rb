@@ -58,13 +58,17 @@ module Mockdown
       #
       # @return  the value converted to this property's data type.
       def set_value(owner, value)
-        raw_value = case type
-        when 'string' then value.to_s
-        when 'integer' then value.to_i
-        when 'decimal' then value.to_f
-        when 'length' then value.to_i
-        when 'color' then value[1..-1].to_i(16)
-        when 'percent' then value.to_f/100
+        if value.nil?
+          raw_value = nil
+        else
+          raw_value = case type
+          when 'string' then value.to_s
+          when 'integer' then value.to_i
+          when 'decimal' then value.to_f
+          when 'length' then value.to_i
+          when 'color' then value[1..-1].to_i(16)
+          when 'percent' then value.to_f/100
+          end
         end
 
         owner.set_raw_property_value(name, raw_value)
@@ -78,13 +82,17 @@ module Mockdown
       def get_value(owner)
         raw_value = owner.get_raw_property_value(name)
 
-        case type
-        when 'string' then raw_value
-        when 'integer' then raw_value
-        when 'decimal' then raw_value
-        when 'length' then "#{raw_value}px"
-        when 'color' then sprintf('#%06x', raw_value)
-        when 'percent' then "#{(raw_value*100).to_i}%"
+        if raw_value.nil?
+          return nil
+        else
+          case type
+          when 'string' then raw_value
+          when 'integer' then raw_value
+          when 'decimal' then raw_value
+          when 'length' then "#{raw_value}px"
+          when 'color' then sprintf('#%06x', raw_value)
+          when 'percent' then "#{(raw_value*100).to_i}%"
+          end
         end
       end
 

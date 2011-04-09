@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env jruby --headless
 
 dir = File.dirname(File.expand_path(__FILE__))
 $:.unshift(File.join(dir, '..', 'lib'))
@@ -10,6 +10,7 @@ require 'commander/import'
 program :name, 'Mockdown'
 program :version, Mockdown::VERSION
 program :description, 'Mockups for hackers.'
+
 
 ################################################################################
 # Render

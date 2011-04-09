@@ -37,7 +37,7 @@ describe Mockdown::Component do
   it 'should set default property value' do
     property = Mockdown::Component::Property.new('foo', 'string', :default => 12)
     @component.add_property(property)
-    @component.foo.should == 12
+    @component.foo.should == '12'
   end
 
   it 'should throw error when getting non-existant property' do

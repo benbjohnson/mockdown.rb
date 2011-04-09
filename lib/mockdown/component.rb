@@ -3,6 +3,8 @@ require 'mockdown/component/composite_property'
 require 'mockdown/component/property_registry'
 require 'mockdown/component/descriptor'
 
+java_import 'java.awt.BasicStroke'
+java_import 'java.awt.Color'
 java_import 'java.awt.image.BufferedImage'
 
 module Mockdown
@@ -83,7 +85,9 @@ module Mockdown
     # @param [Property] property  the property to add.
     def add_property(property)
       @properties[property.name] = property
-      @property_values[property.name] ||= property.default
+      if @property_values[property.name].nil?
+        set_property_value(property.name, property.default)
+      end
     end
 
     # Adds a hash of properties to the component.
@@ -92,7 +96,9 @@ module Mockdown
     def add_properties(hash)
       @properties.merge!(hash)
       hash.each_value do |property|
-        @property_values[property.name] ||= property.default
+        if @property_values[property.name].nil?
+          set_property_value(property.name, property.default)
+        end
       end
     end
 
@@ -223,6 +229,14 @@ module Mockdown
     
     # Sets up the visual context and calls the draw method
     def render()
+      # Check for positive dimensions before creating image
+      if pixel_width <= 0
+        raise StandardError.new('Document cannot have a zero or negative width')
+      end
+      if pixel_height <= 0
+        raise StandardError.new('Document cannot have a zero or negative height')
+      end
+      
       # Create display and graphics context
       image = BufferedImage.new(
         pixel_width, pixel_height, BufferedImage::TYPE_INT_ARGB
@@ -240,7 +254,21 @@ module Mockdown
     # @param [Graphics2D] g  the graphics context.
     def draw(g)
     end
+
+
+    ####################################
+    # Drawing Methods
+    ####################################
     
+    def draw_line(g, x1, y1, x2, y2, thickness, color, alpha)
+      red = (color >> 16) & 0xFF
+      green = (color >> 8) & 0xFF
+      blue = color & 0xFF
+      g.setStroke(BasicStroke.new(thickness))
+      g.setColor(Color.new(red.to_i, green.to_i, blue.to_i, (alpha*255).to_i))
+      g.drawLine(x1, y1, x2, y2)
+    end
+
 
     ############################################################################
     # Protected Methods
