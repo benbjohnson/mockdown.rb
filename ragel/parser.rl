@@ -18,7 +18,7 @@ module Mockdown
 
 			action begin_component {
         name = data[@position...p].pack("c*")
-        descriptor = @loader.find(name)
+        descriptor = Mockdown::Component::Descriptor.new(@loader.find(name))
         builder.add(descriptor, level)
 			}
 			

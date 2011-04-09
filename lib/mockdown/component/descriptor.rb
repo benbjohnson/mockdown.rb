@@ -8,8 +8,8 @@ module Mockdown
       # Constructor
       ##########################################################################
     
-      def initialize(parent=nil)
-        @parent   = parent
+      def initialize(superdescriptor=nil)
+        @superdescriptor = superdescriptor
         @children = []
         @properties = {}
         @property_values = {}
@@ -24,13 +24,16 @@ module Mockdown
       attr_accessor :name
 
       # The descriptor that this descriptor inherits from. When a descriptor
-      # creates an instance of a component, it recursively calls it parent until
-      # a system defined component class is reached.
-      attr_accessor :parent
+      # creates an instance of a component, it recursively calls it super
+      # descriptor until a system defined component class is reached.
+      attr_accessor :superdescriptor
       
       # The properties to set on a component that is instantiated from this
       # descriptor.
       attr_accessor :property_values
+      
+      # The descriptor that this descriptor is a child of.
+      attr_accessor :parent
       
       # A list of descriptors to be instantiated and added as children to a
       # component when created from this descriptor.
@@ -105,11 +108,11 @@ module Mockdown
       def get_property(name)
         if @properties[name]
           return @properties[name]
-        elsif parent.is_a?(Descriptor)
-          return parent.get_property(name)
+        elsif superdescriptor.is_a?(Descriptor)
+          return superdescriptor.get_property(name)
         else
           # Search class-based hierarchy
-          clazz = parent
+          clazz = superdescriptor
           while !clazz.nil?
             property = PropertyRegistry.get_property(clazz, name)
             if property
@@ -188,30 +191,31 @@ module Mockdown
       protected
       ##########################################################################
       
-      # Generates an instance from the parent descriptor or component class.
+      # Generates an instance from the superdescriptor descriptor or component
+      # class.
       def create_instance()
-        # If the parent is a descriptor, defer instantiation to it.
-        if parent.is_a?(Descriptor)
-          instance = parent.create()
-        # If the parent is a system component, instantiate it
-        elsif is_subclass?(parent, Component)
-          instance = parent.new()
-        # If parent is anything else then throw an error.
+        # If the super is a descriptor, defer instantiation to it.
+        if superdescriptor.is_a?(Descriptor)
+          instance = superdescriptor.create()
+        # If the super is a system component, instantiate it
+        elsif is_subclass?(superdescriptor, Component)
+          instance = superdescriptor.new()
+        # If super is anything else then throw an error.
         else
-          raise StandardError.new("Cannot instantiate parent of descriptor: #{parent}")
+          raise StandardError.new("Cannot instantiate super descriptor: #{parent}")
         end
       end
       
       # Checks if a class is a subclass of another class.
       #
       # @param [Class] child   the expected child class.
-      # @param [Class] parent  the class that is expected to be in the child's
+      # @param [Class] p       the class that is expected to be in the child's
       #                        hierarchy.
-      # @return [Boolean]      whether the child is a subclass of the parent.
-      def is_subclass?(child, parent)
+      # @return [Boolean]      whether the child is a subclass of the p.
+      def is_subclass?(child, p)
         clazz = child
         while !clazz.nil?
-          return true if clazz == parent
+          return true if clazz == p
           clazz = clazz.superclass
         end
         return false
@@ -220,11 +224,11 @@ module Mockdown
       # Sets the properties specified by the descriptor onto a component
       # instance.
       def set_instance_properties(instance)
-        # Add the properties of this descriptor and it's parents to the component
+        # Add the properties of this descriptor and it's super to the component
         descriptor = self
         while !descriptor.nil?
           instance.add_properties(descriptor.get_properties())
-          descriptor = descriptor.parent.is_a?(Descriptor) ? descriptor.parent : nil
+          descriptor = descriptor.superdescriptor.is_a?(Descriptor) ? descriptor.superdescriptor : nil
         end
         
         # Loop over properties and set them on instance

@@ -246,29 +246,12 @@ module Mockdown
       # Delegate drawing to separate method
       draw(graphics)
       
+      # Render children
+      render_children(graphics)
+      
       return image
     end
     
-    # Draws the component to the display context.
-    #
-    # @param [Graphics2D] g  the graphics context.
-    def draw(g)
-    end
-
-
-    ####################################
-    # Drawing Methods
-    ####################################
-    
-    def draw_line(g, x1, y1, x2, y2, thickness, color, alpha)
-      red = (color >> 16) & 0xFF
-      green = (color >> 8) & 0xFF
-      blue = color & 0xFF
-      g.setStroke(BasicStroke.new(thickness))
-      g.setColor(Color.new(red.to_i, green.to_i, blue.to_i, (alpha*255).to_i))
-      g.drawLine(x1, y1, x2, y2)
-    end
-
 
     ############################################################################
     # Protected Methods
@@ -340,6 +323,40 @@ module Mockdown
 			  # Restrict min/max
 			  self.pixel_height = Math.limit(h, min_height, max_height)
       end
+    end
+
+
+    ####################################
+    # Render
+    ####################################
+    
+    # Draws the component to the display context.
+    #
+    # @param [Graphics2D] g  the graphics context.
+    def draw(g)
+    end
+    
+    # Renders each of the children and composes their images on this components
+    # image.
+    def render_children(g)
+      children.each do |child|
+        image = child.render()
+        g.drawImage(image, nil, child.x, child.y)
+      end
+    end
+
+
+    ####################################
+    # Drawing Methods
+    ####################################
+    
+    def draw_line(g, x1, y1, x2, y2, thickness, color, alpha)
+      red = (color >> 16) & 0xFF
+      green = (color >> 8) & 0xFF
+      blue = color & 0xFF
+      g.setStroke(BasicStroke.new(thickness))
+      g.setColor(Color.new(red.to_i, green.to_i, blue.to_i, (alpha*255).to_i))
+      g.drawLine(x1, y1, x2, y2)
     end
   end 
 end

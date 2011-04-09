@@ -5,7 +5,7 @@ require 'mockdown/parser/builder'
 module Mockdown
   class Parser
     
-# line 142 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 140 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 
     
     def initialize()
@@ -122,7 +122,7 @@ end
 self.parser_en_main = 1;
 
 
-# line 147 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 145 "/projects/benbjohnson/mockdown/ragel/parser.rl"
     end
 
     # Parses the given data into a mockdown structure
@@ -144,7 +144,7 @@ begin
 	cs = parser_start
 end
 
-# line 161 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 159 "/projects/benbjohnson/mockdown/ragel/parser.rl"
       
 # line 150 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 begin
@@ -241,34 +241,34 @@ when 1 then
         level = indentation/2
 					end
 when 2 then
-# line 111 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 110 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
         name = data[@position...p].pack("c*")
-        descriptor = @loader.find(name)
+        descriptor = Mockdown::Component::Descriptor.new(@loader.find(name))
         builder.add(descriptor, level)
 					end
 when 3 then
-# line 117 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 116 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
         property_name = data[@position...p].pack("c*")
         property_name.gsub!('-', '_')
 					end
 when 4 then
-# line 122 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 121 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
         property_value = data[@position...p].pack("c*")
         property_value = property_value[1..-2]    # Strip quotes
 					end
 when 5 then
-# line 128 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 126 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
         descriptor.set_property_value(property_name, property_value)
 					end
-# line 273 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+# line 272 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 			end # action switch
 		end
 	end
@@ -297,27 +297,27 @@ when 5 then
 		__acts += 1
 		case _parser_actions[__acts - 1]
 when 2 then
-# line 111 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 110 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
         name = data[@position...p].pack("c*")
-        descriptor = @loader.find(name)
+        descriptor = Mockdown::Component::Descriptor.new(@loader.find(name))
         builder.add(descriptor, level)
 					end
 when 4 then
-# line 122 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 121 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
         property_value = data[@position...p].pack("c*")
         property_value = property_value[1..-2]    # Strip quotes
 					end
 when 5 then
-# line 128 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 126 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 		begin
 
         descriptor.set_property_value(property_name, property_value)
 					end
-# line 323 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
+# line 321 "/projects/benbjohnson/mockdown/lib/mockdown/parser.rb"
 		end # eof action switch
 	end
 	if _trigger_goto
@@ -331,7 +331,7 @@ end
 	end
 	end
 
-# line 162 "/projects/benbjohnson/mockdown/ragel/parser.rl"
+# line 160 "/projects/benbjohnson/mockdown/ragel/parser.rl"
 
       # Raise error if parser does not complete
       if p != pe
