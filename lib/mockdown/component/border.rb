@@ -52,6 +52,19 @@ module Mockdown
     prop_accessor :border_right_alpha, 'percent', :default => '100%'
     
 
+    composite_prop_accessor :border_radius,
+      [
+        'border_top_left_radius',
+        'border_top_right_radius',
+        'border_bottom_left_radius',
+        'border_bottom_right_radius'
+      ]
+    prop_accessor :border_top_left_radius, 'length', :default => '0px'
+    prop_accessor :border_top_right_radius, 'length', :default => '0px'
+    prop_accessor :border_bottom_left_radius, 'length', :default => '0px'
+    prop_accessor :border_bottom_right_radius, 'length', :default => '0px'
+
+
     ############################################################################
     # Methods
     ############################################################################
@@ -74,40 +87,117 @@ module Mockdown
       blt = border_left_thickness!
       brt = border_right_thickness!
 
+      tlr = border_top_left_radius!
+      trr = border_top_right_radius!
+      blr = border_bottom_left_radius!
+      brr = border_bottom_right_radius!
+
       # Top border
       if(btt > 0)
+        if tlr
+          draw_arc(g,
+            0, 0,
+            tlr*2, tlr*2,
+            90, 45,
+            btt, border_top_color!, border_top_alpha!
+          )
+        end
+        
         draw_line(g,
-          0, (btt/2),
-          pixel_width, (btt/2),
+          0 + tlr, (btt/2),
+          pixel_width - trr, (btt/2),
           btt, border_top_color!, border_top_alpha!
         )
+
+        if trr
+          draw_arc(g,
+            pixel_width-trr*2, 0,
+            trr*2, trr*2,
+            45, 45,
+            btt, border_top_color!, border_top_alpha!
+          )
+        end
       end
       
       # Right border
       if(brt > 0)
+        if trr
+          draw_arc(g,
+            pixel_width-(trr*2), 0,
+            trr*2, trr*2,
+            0, 45,
+            btt, border_right_color!, border_right_alpha!
+          )
+        end
+
         draw_line(g,
-          pixel_width-(brt/2), 0,
-          pixel_width-(brt/2), pixel_height,
+          pixel_width-(brt/2), trr,
+          pixel_width-(brt/2), pixel_height - brr,
           brt, border_right_color!, border_right_alpha!
         )
+
+        if brr
+          draw_arc(g,
+            pixel_width-(brr*2)-1, pixel_height-(brr*2)-1,
+            brr*2, brr*2,
+            315, 45,
+            btt, border_right_color!, border_right_alpha!
+          )
+        end
       end
       
       # Bottom border
       if(bbt > 0)
+        if brr
+          draw_arc(g,
+            pixel_width-(brr*2)-1, pixel_height-(brr*2)-1,
+            brr*2, brr*2,
+            270, 45,
+            btt, border_bottom_color!, border_bottom_alpha!
+          )
+        end
+
         draw_line(g,
-          pixel_width, pixel_height-(bbt/2),
-          0, pixel_height-(bbt/2),
+          pixel_width - brr, pixel_height-(bbt/2),
+          blr, pixel_height-(bbt/2),
           bbt, border_bottom_color!, border_bottom_alpha!
         )
+
+        if blr
+          draw_arc(g,
+            0, pixel_height-(brr*2)-1,
+            blr*2, blr*2,
+            225, 45,
+            btt, border_bottom_color!, border_bottom_alpha!
+          )
+        end
       end
       
       # Left border
       if(blt > 0)
+        if blr
+          draw_arc(g,
+            0, pixel_height-(brr*2)-1,
+            blr*2, blr*2,
+            180, 45,
+            btt, border_left_color!, border_left_alpha!
+          )
+        end
+
         draw_line(g,
-          blt/2, pixel_height,
-          blt/2, 0,
+          blt/2, pixel_height - blr,
+          blt/2, tlr,
           blt, border_left_color!, border_left_alpha!
         )
+
+        if tlr
+          draw_arc(g,
+            0, 0,
+            tlr*2, tlr*2,
+            135, 45,
+            btt, border_left_color!, border_left_alpha!
+          )
+        end
       end
     end
   end 

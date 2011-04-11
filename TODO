@@ -1,5 +1,6 @@
 ## IMMEDIATE
-- Add border styles
+- Add padding for borders on containers
+- Add rounded corner styles
 - Add background styles
 - Add text component ??
 - Add array property types
