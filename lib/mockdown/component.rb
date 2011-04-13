@@ -359,14 +359,14 @@ module Mockdown
     
     def draw_line(g, x1, y1, x2, y2, thickness, color, alpha)
       red, green, blue = *extract_color(color)
-      g.setStroke(BasicStroke.new(thickness))
+      g.setStroke(BasicStroke.new(thickness, BasicStroke::CAP_BUTT, BasicStroke::JOIN_MITER))
       g.setColor(Color.new(red.to_i, green.to_i, blue.to_i, (alpha*255).to_i))
       g.drawLine(x1, y1, x2, y2)
     end
 
     def draw_arc(g, x, y, width, height, start_angle, arc_angle, thickness, color, alpha)
       red, green, blue = *extract_color(color)
-      g.setStroke(BasicStroke.new(thickness))
+      g.setStroke(BasicStroke.new(thickness, BasicStroke::CAP_BUTT, BasicStroke::JOIN_MITER))
       g.setColor(Color.new(red.to_i, green.to_i, blue.to_i, (alpha*255).to_i))
       g.drawArc(x, y, width, height, start_angle, arc_angle)
     end
